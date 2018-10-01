@@ -180,7 +180,7 @@ var masterFMGC = maketimer(0.2, func {
 	mode = getprop("/modes/pfd/fma/pitch-mode");
 	modeI = getprop("/it-autoflight/mode/vert");
 	gs = getprop("/velocities/groundspeed-kt");
-	alt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+	alt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 	aglalt = getprop("/position/gear-agl-ft");
 	cruiseft = getprop("/FMGC/internal/cruise-ft");
 	cruiseft_b = getprop("/FMGC/internal/cruise-ft") - 200;
@@ -320,7 +320,7 @@ var reset_FMGC = func {
 	setprop("/systems/pressurization/outflowpos", "0");
 	setprop("/systems/pressurization/deltap-norm", "0");
 	setprop("/systems/pressurization/outflowpos-norm", "0");
-	altitude = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+	altitude = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 	setprop("/systems/pressurization/cabinalt", altitude);
 	setprop("/systems/pressurization/targetalt", altitude); 
 	setprop("/systems/pressurization/diff-to-target", "0");
@@ -445,10 +445,10 @@ var adf1 = func {
 var ManagedSPD = maketimer(0.25, func {
 	if (getprop("/FMGC/internal/cruise-lvl-set") == 1 and getprop("/FMGC/internal/cost-index-set") == 1) {
 		if (getprop("/it-autoflight/input/spd-managed") == 1) {
-			altitude = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+			altitude = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 			mode = getprop("/modes/pfd/fma/pitch-mode");
-			ias = getprop("/instrumentation/airspeed-indicator/indicated-speed-kt");
-			mach = getprop("/instrumentation/airspeed-indicator/indicated-mach");
+			ias = getprop("/instrumentation/airspeed-indicator[0]/indicated-speed-kt");
+			mach = getprop("/instrumentation/airspeed-indicator[0]/indicated-mach");
 			ktsmach = getprop("/it-autoflight/input/kts-mach");
 			mngktsmach = getprop("/FMGC/internal/mng-kts-mach");
 			mng_spd = getprop("/FMGC/internal/mng-spd");

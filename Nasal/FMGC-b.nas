@@ -415,7 +415,7 @@ var vertical = func {
 		alandt.stop();
 		alandt1.stop();
 		mng_sys_stop();
-		var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+		var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 		var alt = getprop("/it-autoflight/internal/alt");
 		var dif = calt - alt;
 		vsnow = getprop("/it-autoflight/internal/vert-speed-fpm");
@@ -435,7 +435,7 @@ var vertical = func {
 		setprop("/it-autoflight/output/appr-armed", 0);
 		var altinput = getprop("/it-autoflight/input/alt");
 		setprop("/it-autoflight/internal/alt", altinput);
-		var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+		var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 		var alt = getprop("/it-autoflight/internal/alt");
 		var dif = calt - alt;
 		if (dif < 250 and dif > -250) {
@@ -689,7 +689,7 @@ setlistener("/it-autoflight/input/toga", func {
 
 var togasel = func {
 	if ((getprop("/gear/gear[1]/wow") == 0) and (getprop("/gear/gear[2]/wow") == 0)) {
-		var iasnow = math.round(getprop("/instrumentation/airspeed-indicator/indicated-speed-kt"));
+		var iasnow = math.round(getprop("/instrumentation/airspeed-indicator[0]/indicated-speed-kt"));
 		setprop("/it-autoflight/input/spd-kts", iasnow);
 		setprop("/it-autoflight/input/kts-mach", 0);
 		setprop("/it-autoflight/mode/vert", "G/A CLB");
@@ -712,7 +712,7 @@ setlistener("/it-autoflight/mode/vert", func {
 });
 
 var toga_reduc = func {
-	if (getprop("/instrumentation/altimeter/indicated-altitude-ft") >= getprop("/it-autoflight/settings/reduc-agl-ft") and getprop("/gear/gear[1]/wow") == 0 and getprop("/gear/gear[2]/wow") == 0) {
+	if (getprop("/instrumentation/altimeter[0]/indicated-altitude-ft") >= getprop("/it-autoflight/settings/reduc-agl-ft") and getprop("/gear/gear[1]/wow") == 0 and getprop("/gear/gear[2]/wow") == 0) {
 		setprop("/it-autoflight/input/vert", 4);
 	}
 }
@@ -751,7 +751,7 @@ var altcapt = func {
 	setprop("/it-autoflight/internal/captvs", math.round(abs(vsnow) / 5, 100));
 	setprop("/it-autoflight/internal/captvsneg", -1 * math.round(abs(vsnow) / 5, 100));
 	if ((getprop("/it-autoflight/output/fd1") == 1 or getprop("/it-autoflight/output/fd2") == 1 or getprop("/it-autoflight/output/ap1") == 1 or getprop("/it-autoflight/output/ap2") == 1) and getprop("/it-autoflight/output/vert") != 9) {
-		var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+		var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 		var alt = getprop("/it-autoflight/internal/alt");
 		var dif = calt - alt;
 		if (dif < getprop("/it-autoflight/internal/captvs") and dif > getprop("/it-autoflight/internal/captvsneg")) {
@@ -772,7 +772,7 @@ var altcapt = func {
 
 # Min and Max Pitch Reset
 var minmax = func {
-	var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+	var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 	var alt = getprop("/it-autoflight/internal/alt");
 	var dif = calt - alt;
 	if (dif < 50 and dif > -50) {
@@ -790,7 +790,7 @@ var minmax = func {
 
 # Thrust Mode Selector
 var thrustmode = func {
-	var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+	var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 	var alt = getprop("/it-autoflight/internal/alt");
 	if (getprop("/it-autoflight/output/vert") == 4) {
 		if (calt < alt) {
@@ -997,7 +997,7 @@ var mng_run = func {
 		var mng_alt_wp = getprop("/autopilot/route-manager/route/wp",wp_curr,"altitude-ft");
 		if ((wptnum - 1) < getprop("/autopilot/route-manager/route/num")) {
 			var mng_alt_wp_prev = getprop("/autopilot/route-manager/route/wp",wp_curr - 1,"altitude-ft");
-			var altcurr = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+			var altcurr = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 			if (mng_alt_wp_prev >= 100) {
 				if (mng_alt_wp_prev > mng_alt_wp) {
 					mng_des_todt.start();
@@ -1031,7 +1031,7 @@ var mng_run = func {
 		}
 		if (mng_alt_wp >= 100) {
 			if (getprop("/it-autoflight/internal/mng-mode") == "CLB") {
-				var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+				var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 				var valt = getprop("/it-autoflight/internal/mng-alt");
 				var vdif = calt - valt;
 				if (vdif > 250 or vdif < -250) {
@@ -1040,7 +1040,7 @@ var mng_run = func {
 					mng_alt_sel();
 				}
 			} else if (getprop("/it-autoflight/internal/mng-mode") == "DES") {
-				var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+				var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 				var valt = getprop("/it-autoflight/internal/mng-alt");
 				var vdif = calt - valt;
 				if (vdif > 250 or vdif < -250) {
@@ -1064,7 +1064,7 @@ var mng_des_tod = func {
 	if (getprop("/autopilot/route-manager/route/num") > 0 and getprop("/autopilot/route-manager/active") == 1) {
 		var wp_curr = getprop("/autopilot/route-manager/current-wp");
 		var mng_alt_wp = getprop("/autopilot/route-manager/route/wp",wp_curr,"altitude-ft");
-		var alt_curr = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+		var alt_curr = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 		var dist = getprop("/autopilot/route-manager/wp/dist");
 		var vdist = dist + 1;
 		var alttl = abs(alt_curr - mng_alt_wp);
@@ -1073,7 +1073,7 @@ var mng_des_tod = func {
 			mng_des_todt.stop();
 			var salt = getprop("/it-autoflight/internal/alt");
 			var valt = getprop("/it-autoflight/internal/alt-const");
-			var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+			var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 			var sdif = abs(calt - salt);
 			var vdif = abs(calt - valt);
 			if (sdif <= vdif) {
@@ -1081,7 +1081,7 @@ var mng_des_tod = func {
 			} else if (sdif > vdif) {
 				setprop("/it-autoflight/internal/mng-alt", getprop("/it-autoflight/internal/alt-const"));
 			}
-			var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+			var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 			var valt = getprop("/it-autoflight/internal/mng-alt");
 			var vdif = calt - valt;
 			if (vdif > 550 or vdif < -550) {
@@ -1097,7 +1097,7 @@ var mng_des_tod = func {
 var mng_alt_selector = func {
 	var salt = getprop("/it-autoflight/internal/alt");
 	var valt = getprop("/it-autoflight/internal/alt-const");
-	var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+	var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 	var sdif = abs(calt - salt);
 	var vdif = abs(calt - valt);
 	if (getprop("/it-autoflight/internal/mng-mode") == "CLB") {
@@ -1174,7 +1174,7 @@ var mng_altcapt = func {
 	var MCPalt = getprop("/it-autoflight/internal/alt");
 	var MNGdif = abs(MNGalt - MCPalt);
 	if (MNGdif <= 20) {
-		var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+		var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 		var alt = getprop("/it-autoflight/internal/alt");
 		var dif = calt - alt;
 		if (dif < getprop("/it-autoflight/internal/captvs") and dif > getprop("/it-autoflight/internal/captvsneg")) {
@@ -1187,7 +1187,7 @@ var mng_altcapt = func {
 			}
 		}
 	} else {
-		var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+		var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 		var valt = getprop("/it-autoflight/internal/mng-alt");
 		var vdif = calt - valt;
 		if (vdif < getprop("/it-autoflight/internal/captvs") and vdif > getprop("/it-autoflight/internal/captvsneg")) {
@@ -1205,7 +1205,7 @@ var mng_capture_alt = func {
 	vsnow = getprop("/it-autoflight/internal/vert-speed-fpm");
 	mng_altcaptt.stop();
 	mng_des_fpmt.stop();
-	var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+	var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 	var alt = getprop("/it-autoflight/internal/alt");
 	var valt = getprop("/it-autoflight/internal/mng-alt");
 	if (calt < valt) {
@@ -1222,7 +1222,7 @@ var mng_capture_alt = func {
 
 # Managed Min and Max Pitch Reset
 var mng_minmax = func {
-	var calt = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+	var calt = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 	var valt = getprop("/it-autoflight/internal/mng-alt");
 	var vdif = calt - valt;
 	if (vdif < 50 and vdif > -50) {

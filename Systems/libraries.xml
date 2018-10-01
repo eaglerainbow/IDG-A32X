@@ -149,13 +149,49 @@
 			<expression>
 				<floor>
 					<div>
-						<property>/instrumentation/altimeter/indicated-altitude-ft</property> 
+						<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property> 
 						<value>100</value>
 					</div>
 				</floor>
 			</expression>
 		</input>
-		<output>/instrumentation/altimeter/indicated-altitude-ft-pfd</output>
+		<output>/instrumentation/altimeter[0]/indicated-altitude-ft-pfd</output>
+	</filter>
+	
+	<filter>
+		<name>Altitude PFD</name>
+		<type>gain</type>
+		<gain>1.0</gain>
+		<update-interval-secs type="double">0.05</update-interval-secs>
+		<input>
+			<expression>
+				<floor>
+					<div>
+						<property>/instrumentation/altimeter[1]/indicated-altitude-ft</property> 
+						<value>100</value>
+					</div>
+				</floor>
+			</expression>
+		</input>
+		<output>/instrumentation/altimeter[1]/indicated-altitude-ft-pfd</output>
+	</filter>
+
+	<filter>
+		<name>Altitude STBY</name>
+		<type>gain</type>
+		<gain>1.0</gain>
+		<update-interval-secs type="double">0.05</update-interval-secs>
+		<input>
+			<expression>
+				<floor>
+					<div>
+						<property>/instrumentation/altimeter[2]/indicated-altitude-ft</property> 
+						<value>100</value>
+					</div>
+				</floor>
+			</expression>
+		</input>
+		<output>/instrumentation/altimeter[2]/indicated-altitude-ft-iesi</output>
 	</filter>
 
 	<filter>
@@ -244,7 +280,7 @@
 		<input>
 			<expression>
 				<table>
-					<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+					<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property>
 					<entry><ind>    0</ind><dep>   0</dep></entry>
 					<entry><ind> 1000</ind><dep> 500</dep></entry>
 					<entry><ind> 5000</ind><dep>1100</dep></entry>
@@ -350,7 +386,7 @@
 		<input>
 			<expression>
 				<table>
-					<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+					<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property>
 					<entry><ind>-1000</ind><dep>16.50000</dep></entry>
 					<entry><ind>    0</ind><dep>14.70000</dep></entry>
 					<entry><ind> 1000</ind><dep>14.20000</dep></entry>
@@ -553,7 +589,7 @@
 		<name>TAS</name>
 		<type>gain</type>
 		<gain>1.0</gain>
-		<input>/instrumentation/airspeed-indicator/true-speed-kt</input>
+		<input>/instrumentation/airspeed-indicator[0]/true-speed-kt</input>
 		<output>/velocities/TAS</output>
 	</filter>
 	
@@ -611,7 +647,7 @@
 		<input>
 			<expression>
 				<table>
-					<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+					<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property>
 					<entry><ind>-1000</ind><dep> 21.5</dep></entry>
 					<entry><ind>    0</ind><dep> 15.0</dep></entry>
 					<entry><ind> 1000</ind><dep>  8.5</dep></entry>

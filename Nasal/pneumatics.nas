@@ -108,7 +108,7 @@ var PNEU = {
 		setprop("/systems/pneumatic/xbleed-state", "closed");
 		setprop("/systems/pneumatic/starting", 0);
 		setprop("/FMGC/internal/dep-arpt", "");
-		altitude = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+		altitude = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 		setprop("/systems/pressurization/mode", "GN");
 		setprop("/systems/pressurization/vs", "0");
 		setprop("/systems/pressurization/targetvs", "0");
@@ -328,7 +328,7 @@ var PNEU = {
 		deltap = getprop("/systems/pressurization/deltap");
 		outflow = getprop("/systems/pressurization/outflowpos"); 
 		speed = getprop("/velocities/groundspeed-kt");
-		altitude = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+		altitude = getprop("/instrumentation/altimeter[0]/indicated-altitude-ft");
 		airport_arr_elev_ft = getprop("autopilot/route-manager/destination/field-elevation-ft");
 		vs = getprop("/systems/pressurization/vs-norm");
 		manvs = getprop("/systems/pressurization/manvs-cmd");

@@ -42,16 +42,46 @@ file, these values will be used (they are hardcoded).
 	</adf>
 	
 	<airspeed-indicator>
-		<name>airspeed-indicator</name>
+		<name>airspeed-indicator</name> <!-- capt -->
 		<number>0</number>
-		<total-pressure>/systems/pitot/total-pressure-inhg</total-pressure>
-		<static-pressure>/systems/static/pressure-inhg</static-pressure>
+		<total-pressure>/fdm/jsbsim/systems/navigation/air-data/probes/capt-pitot-pressure-raw</total-pressure>
+		<static-pressure>/fdm/jsbsim/systems/navigation/air-data/probes/capt-static-pressure-raw</static-pressure>
+	</airspeed-indicator>
+	
+	<airspeed-indicator>
+		<name>airspeed-indicator</name> <!-- fo -->
+		<number>1</number>
+		<total-pressure>/fdm/jsbsim/systems/navigation/air-data/probes/fo-pitot-pressure-raw</total-pressure>
+		<static-pressure>/fdm/jsbsim/systems/navigation/air-data/probes/fo-static-pressure-raw</static-pressure>
+	</airspeed-indicator>
+	
+	<airspeed-indicator>
+		<name>airspeed-indicator</name> <!-- stby -->
+		<number>2</number>
+		<total-pressure>/fdm/jsbsim/systems/navigation/air-data/probes/stby-pitot-pressure-raw</total-pressure>
+		<static-pressure>/fdm/jsbsim/systems/navigation/air-data/probes/stby-static-pressure-raw</static-pressure>
 	</airspeed-indicator>
 	
 	<altimeter>
 		<name>altimeter</name>
-		<number>0</number>
-		<static-pressure>/systems/static/pressure-inhg</static-pressure>
+		<number>0</number> <!-- capt -->
+		<static-pressure>/fdm/jsbsim/systems/navigation/air-data/probes/capt-static-pressure-raw</static-pressure>
+		<quantum>0</quantum>
+		<tau>0</tau>
+	</altimeter>
+	
+	<altimeter>
+		<name>altimeter</name>
+		<number>1</number> <!-- fo -->
+		<static-pressure>/fdm/jsbsim/systems/navigation/air-data/probes/fo-static-pressure-raw</static-pressure>
+		<quantum>0</quantum>
+		<tau>0</tau>
+	</altimeter>
+	
+	<altimeter>
+		<name>altimeter</name>
+		<number>2</number> <!-- stby -->
+		<static-pressure>/fdm/jsbsim/systems/navigation/air-data/probes/stby-static-pressure-raw</static-pressure>
 		<quantum>0</quantum>
 		<tau>0</tau>
 	</altimeter>

@@ -163,6 +163,7 @@
 			<autopilot n="11">
 				<path>Aircraft/IDG-A32X/Systems/zoom-views.xml</path>
 			</autopilot>
+			<path>Aircraft/IDG-A32X/Systems/systems.xml</path>
 		</systems>
 
 		<sounde>
@@ -179,7 +180,7 @@
 		<instrumentation>
 			<path>Aircraft/IDG-A32X/Systems/instrumentation.xml</path>
 		</instrumentation>
-
+		
 		<alarms>
 			<master-caution type="bool">0</master-caution>
 		</alarms>
@@ -765,6 +766,18 @@
 			<green-psi>0</green-psi>
 			<yellow-psi>0</yellow-psi>
 		</hydraulic>
+		<static n="1">
+			<serviceable>1</serviceable>
+		</static>
+		<static n="2">
+			<serviceable>1</serviceable>
+		</static>
+		<pitot n="1">
+			<serviceable>1</serviceable>
+		</pitot>
+		<pitot n="2">
+			<serviceable>1</serviceable>
+		</pitot>
 	</systems>
 	
 	<options n="0">
@@ -983,6 +996,21 @@
 			<elapsed-time type="int">0</elapsed-time>
 		</chrono>
 		
+		<airspeed-indicator n="1">
+			<serviceable type="bool" archive="y">true</serviceable>
+		</airspeed-indicator>
+		
+		<airspeed-indicator n="2">
+			<serviceable type="bool" archive="y">true</serviceable>
+		</airspeed-indicator>
+		
+		<altimeter n="1">
+			<serviceable type="bool" archive="y">true</serviceable>
+		</altimeter>
+		
+		<altimeter n="2">
+			<serviceable type="bool" archive="y">true</serviceable>
+		</altimeter>
 	</instrumentation>
 	
 	<modes>
@@ -991,6 +1019,11 @@
 			<std>0</std>
 			<oldqnh>29.92</oldqnh>
 		</altimeter>
+		<altimeter-stby>
+			<inhg>0</inhg>
+			<std>0</std>
+			<oldqnh>29.92</oldqnh>
+		</altimeter-stby>
 		<cpt-du-xfr>0</cpt-du-xfr>
 		<fo-du-xfr>0</fo-du-xfr>
 		<pfd>

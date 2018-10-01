@@ -17,7 +17,7 @@
 	<predict-simple>
 		<name>IAS 5 SECOND PREDICTOR</name>
 		<debug>false</debug>
-		<input>/instrumentation/airspeed-indicator/indicated-speed-kt</input>
+		<input>/instrumentation/airspeed-indicator[0]/indicated-speed-kt</input>
 		<output>/it-autoflight/internal/lookahead-5-sec-airspeed-kt</output>
 		<seconds>5.0</seconds>
 		<filter-gain>0.0</filter-gain>
@@ -26,7 +26,7 @@
 	<predict-simple>
 		<name>IAS 10 SECOND PREDICTOR</name>
 		<debug>false</debug>
-		<input>/instrumentation/airspeed-indicator/indicated-speed-kt</input>
+		<input>/instrumentation/airspeed-indicator[0]/indicated-speed-kt</input>
 		<output>/it-autoflight/internal/lookahead-10-sec-airspeed-kt</output>
 		<seconds>10.0</seconds>
 		<filter-gain>0.0</filter-gain>
@@ -35,7 +35,7 @@
 	<predict-simple>
 		<name>IAS 15 SECOND PREDICTOR</name>
 		<debug>false</debug>
-		<input>/instrumentation/airspeed-indicator/indicated-speed-kt</input>
+		<input>/instrumentation/airspeed-indicator[0]/indicated-speed-kt</input>
 		<output>/it-autoflight/internal/lookahead-15-sec-airspeed-kt</output>
 		<seconds>15.0</seconds>
 		<filter-gain>0.0</filter-gain>
@@ -44,7 +44,7 @@
 	<predict-simple>
 		<name>MACH 5 SECOND PREDICTOR</name>
 		<debug>false</debug>
-		<input>/instrumentation/airspeed-indicator/indicated-mach</input>
+		<input>/instrumentation/airspeed-indicator[0]/indicated-mach</input>
 		<output>/it-autoflight/internal/lookahead-5-sec-mach</output>
 		<seconds>5.0</seconds>
 		<filter-gain>0.0</filter-gain>
@@ -53,7 +53,7 @@
 	<predict-simple>
 		<name>MACH 10 SECOND PREDICTOR</name>
 		<debug>false</debug>
-		<input>/instrumentation/airspeed-indicator/indicated-mach</input>
+		<input>/instrumentation/airspeed-indicator[0]/indicated-mach</input>
 		<output>/it-autoflight/internal/lookahead-10-sec-mach</output>
 		<seconds>10.0</seconds>
 		<filter-gain>0.0</filter-gain>
@@ -62,7 +62,7 @@
 	<predict-simple>
 		<name>MACH 15 SECOND PREDICTOR</name>
 		<debug>false</debug>
-		<input>/instrumentation/airspeed-indicator/indicated-mach</input>
+		<input>/instrumentation/airspeed-indicator[0]/indicated-mach</input>
 		<output>/it-autoflight/internal/lookahead-15-sec-mach</output>
 		<seconds>15.0</seconds>
 		<filter-gain>0.0</filter-gain>
@@ -143,7 +143,7 @@
 			<expression>
 				<product>
 					<table>
-						<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+						<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property>
 						<entry><ind>20000</ind><dep>0.625</dep></entry>
 						<entry><ind>42000</ind><dep>0.805</dep></entry>
 					</table>
@@ -184,8 +184,8 @@
 			<expression>
 				<product>
 					<div>
-						<property>/instrumentation/airspeed-indicator/indicated-speed-kt</property>
-						<property>/instrumentation/airspeed-indicator/indicated-mach</property>
+						<property>/instrumentation/airspeed-indicator[0]/indicated-speed-kt</property>
+						<property>/instrumentation/airspeed-indicator[0]/indicated-mach</property>
 					</div>
 					<property>/it-autoflight/input/spd-mach</property>
 				</product>
@@ -334,7 +334,7 @@
 			</condition>
 		</enable>
 		<update-interval-secs type="double">0.5</update-interval-secs>
-		<input>/instrumentation/airspeed-indicator/indicated-speed-kt</input>
+		<input>/instrumentation/airspeed-indicator[0]/indicated-speed-kt</input>
 		<output>/it-autoflight/input/spd-kts</output>
 	</filter>
 	
@@ -351,7 +351,7 @@
 			</condition>
 		</enable>
 		<update-interval-secs type="double">0.5</update-interval-secs>
-		<input>/instrumentation/airspeed-indicator/indicated-mach</input>
+		<input>/instrumentation/airspeed-indicator[0]/indicated-mach</input>
 		<output>/it-autoflight/input/spd-mach</output>
 	</filter>
 	
@@ -808,7 +808,7 @@
 						<property>/it-autoflight/internal/vert-speed-fpm</property>
 						<value>5</value>
 					</div>
-					<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+					<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property>
 				</sum>
 			</expression>
 		</input>
@@ -910,7 +910,7 @@
 						<property>/it-autoflight/internal/vert-speed-fpm</property>
 					</dif>
 					<table>
-						<property>/instrumentation/airspeed-indicator/indicated-mach</property> 
+						<property>/instrumentation/airspeed-indicator[0]/indicated-mach</property> 
 						<entry><ind>0.20</ind><dep>0.004</dep></entry>
 						<entry><ind>0.95</ind><dep>0.002</dep></entry>
 					</table>

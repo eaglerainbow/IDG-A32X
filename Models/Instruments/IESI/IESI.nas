@@ -25,17 +25,17 @@ var dcbat = props.globals.getNode("/systems/electrical/bus/dcbat");
 var dc1 = props.globals.getNode("/systems/electrical/bus/dc1");
 var dc2 = props.globals.getNode("/systems/electrical/bus/dc2");
 
-var airspeed = props.globals.getNode("/instrumentation/airspeed-indicator/indicated-speed-kt");
-var mach = props.globals.getNode("/instrumentation/airspeed-indicator/indicated-mach");
-var pitch = props.globals.getNode("/orientation/pitch-deg");
+var airspeed = props.globals.getNode("/instrumentation/airspeed-indicator[2]/indicated-speed-kt");
+var mach = props.globals.getNode("/fdm/jsbsim/systems/navigation/air-data/unit3/mach");
+var pitch = props.globals.getNode("/orientation/pitch-deg"); # make sure to switch to IR 3 data!
 var roll =  props.globals.getNode("/orientation/roll-deg");
 var skid = props.globals.getNode("/instrumentation/slip-skid-ball/indicated-slip-skid");
-var altitude = props.globals.getNode("/instrumentation/altimeter/indicated-altitude-ft");
-var altitude_ind = props.globals.getNode("/instrumentation/altimeter/indicated-altitude-ft-pfd");
+var altitude = props.globals.getNode("/instrumentation/altimeter[2]/indicated-altitude-ft");
+var altitude_ind = props.globals.getNode("/instrumentation/altimeter[2]/indicated-altitude-ft-iesi");
 
-var altimeter_mode = props.globals.getNode("/modes/altimeter/std");
-var qnh_hpa = props.globals.getNode("/instrumentation/altimeter/setting-hpa");
-var qnh_inhg = props.globals.getNode("/instrumentation/altimeter/setting-inhg");
+var altimeter_mode = props.globals.getNode("/modes/altimeter-stby/std");
+var qnh_hpa = props.globals.getNode("/instrumentation/altimeter[2]/setting-hpa");
+var qnh_inhg = props.globals.getNode("/instrumentation/altimeter[2]/setting-inhg");
 
 var canvas_IESI_base = {
 	init: func(canvas_group, file) {

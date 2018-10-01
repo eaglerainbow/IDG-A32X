@@ -251,7 +251,7 @@
 			</condition>
 		</enable>
 		<input>
-			<property>/instrumentation/airspeed-indicator/indicated-speed-kt</property>
+			<property>/instrumentation/airspeed-indicator[0]/indicated-speed-kt</property>
 		</input>
 		<reference>
 			<property>/it-autoflight/internal/kts</property>
@@ -383,7 +383,7 @@
 			</condition>
 		</enable>
 		<input>
-			<property>/instrumentation/airspeed-indicator/indicated-mach</property>
+			<property>/instrumentation/airspeed-indicator[0]/indicated-mach</property>
 			<scale>1000.0</scale>
 		</input>
 		<reference>

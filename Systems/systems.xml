@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<!--
+##############################################
+# Copyright (c) Joshua Davidson (it0uchpods) #
+##############################################
+-->
+
+<PropertyList>
+	<pitot>
+		<name>pitot</name>
+		<number>0</number>
+	</pitot>
+	
+	<pitot>
+		<name>pitot</name>
+		<number>1</number>
+	</pitot>
+	
+	<pitot>
+		<name>pitot</name>
+		<number>2</number>
+	</pitot>
+
+	<static>
+		<name>static</name>
+		<number>0</number>
+		<type>1</type>
+		<tau>0.1</tau>
+		<error-factor>0.2</error-factor>
+	</static>
+
+	<static>
+		<name>static</name>
+		<number>1</number>
+		<type>1</type>
+		<tau>0.1</tau>
+		<error-factor>0.2</error-factor>
+	</static>
+
+	<static>
+		<name>static</name>
+		<number>2</number>
+		<type>1</type>
+		<tau>0.1</tau>
+		<error-factor>0.2</error-factor>
+	</static>
+</PropertyList>

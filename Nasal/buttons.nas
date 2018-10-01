@@ -163,8 +163,8 @@ var CVR_test = func {
 var mcpSPDKnbPull = func {
 	setprop("/it-autoflight/input/spd-managed", 0);
 	fmgc.ManagedSPD.stop();
-	var ias = getprop("/instrumentation/airspeed-indicator/indicated-speed-kt");
-	var mach = getprop("/instrumentation/airspeed-indicator/indicated-mach");
+	var ias = getprop("/instrumentation/airspeed-indicator[0]/indicated-speed-kt");
+	var mach = getprop("/instrumentation/airspeed-indicator[0]/indicated-mach");
 	if (getprop("/it-autoflight/input/kts-mach") == 0) {
 		if (ias >= 100 and ias <= 360) {
 			setprop("/it-autoflight/input/spd-kts", math.round(ias, 1));
@@ -224,13 +224,29 @@ var toggleSTD = func {
 	var Std = getprop("/modes/altimeter/std");
 	if (Std == 1) {
 		var oldqnh = getprop("/modes/altimeter/oldqnh");
-		setprop("/instrumentation/altimeter/setting-inhg", oldqnh);
+		setprop("/instrumentation/altimeter[0]/setting-inhg", oldqnh);
+		setprop("/instrumentation/altimeter[1]/setting-inhg", oldqnh);
 		setprop("/modes/altimeter/std", 0);
 	} else if (Std == 0) {
-		var qnh = getprop("/instrumentation/altimeter/setting-inhg");
+		var qnh = getprop("/instrumentation/altimeter[0]/setting-inhg");
 		setprop("/modes/altimeter/oldqnh", qnh);
-		setprop("/instrumentation/altimeter/setting-inhg", 29.92);
+		setprop("/instrumentation/altimeter[0]/setting-inhg", 29.92);
+		setprop("/instrumentation/altimeter[1]/setting-inhg", 29.92);
 		setprop("/modes/altimeter/std", 1);
+	}
+}
+
+var toggleSTDIESI = func {
+	var StdIESI = getprop("/modes/altimeter-stby/std");
+	if (StdIESI == 1) {
+		var oldqnh = getprop("/modes/altimeter-stby/oldqnh");
+		setprop("/instrumentation/altimeter[2]/setting-inhg", oldqnh);
+		setprop("/modes/altimeter-stby/std", 0);
+	} else if (StdIESI == 0) {
+		var qnh = getprop("/instrumentation/altimeter[2]/setting-inhg");
+		setprop("/modes/altimeter-stby/oldqnh", qnh);
+		setprop("/instrumentation/altimeter[2]/setting-inhg", 29.92);
+		setprop("/modes/altimeter-stby/std", 1);
 	}
 }
 
