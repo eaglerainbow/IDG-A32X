@@ -11,62 +11,51 @@
 	<channel name="Air Data">
 		<sensor name="systems/navigation/air-data/probes/capt-alpha-raw"> <!-- AOA sensor 2-->
 			<input>aero/alpha-deg</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/stby-alpha-raw"> <!-- AOA sensor 2-->
 			<input>aero/alpha-deg</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/fo-alpha-raw"> <!-- AOA sensor 3-->
 			<input>aero/alpha-deg</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/capt-outside-air-temp-raw"> <!-- TAT sensor 1. We can't measure TAT, so we take OAT and calculate TAT -->
 			<input>/environment/temperature-degc</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/fo-outside-air-temp-raw"> <!-- TAT sensor 2. We can't measure TAT, so we take OAT and calculate TAT -->
 			<input>/environment/temperature-degc</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/capt-pitot-pressure-raw">
 			<input>/systems/pitot[0]/measured-total-pressure-inhg</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/fo-pitot-pressure-raw">
 			<input>/systems/pitot[1]/measured-total-pressure-inhg</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/stby-pitot-pressure-raw">
 			<input>/systems/pitot[2]/measured-total-pressure-inhg</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/capt-static-pressure-raw">
 			<input>/systems/static[0]/pressure-inhg</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/fo-static-pressure-raw">
 			<input>/systems/static[1]/pressure-inhg</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/stby-static-pressure-raw">
 			<input>/systems/static[2]/pressure-inhg</input>
-			<noise variation="PERCENT" distribution="GAUSSIAN">0.00001</noise>
 			<lag>9999</lag>
 		</sensor>
 	</channel>
