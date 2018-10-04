@@ -76,7 +76,9 @@ var alt_inhg = props.globals.getNode("/instrumentation/altimeter[0]/setting-inhg
 var altitude = props.globals.getNode("/instrumentation/altimeter[0]/indicated-altitude-ft", 1);
 var altitude_pfd = props.globals.getNode("/instrumentation/altimeter[0]/indicated-altitude-ft-pfd", 1);
 var altitude_1 = props.globals.getNode("/instrumentation/altimeter[1]/indicated-altitude-ft", 1);
+var altitude_2 = props.globals.getNode("/instrumentation/altimeter[2]/indicated-altitude-ft", 1);
 var altitude_pfd_1 = props.globals.getNode("/instrumentation/altimeter[1]/indicated-altitude-ft-pfd", 1);
+var altitude_pfd_2 = props.globals.getNode("/instrumentation/altimeter[2]/indicated-altitude-ft-iesi", 1);
 var alt_diff = props.globals.getNode("/instrumentation/pfd/alt-diff", 1);
 var ap_alt = props.globals.getNode("/it-autoflight/internal/alt", 1);
 var vs_needle = props.globals.getNode("/instrumentation/pfd/vs-needle", 1);
@@ -88,6 +90,8 @@ var ind_spd_kt = props.globals.getNode("/instrumentation/airspeed-indicator[0]/i
 var ind_spd_mach = props.globals.getNode("/instrumentation/airspeed-indicator[0]/indicated-mach", 1);
 var ind_spd_kt_1 = props.globals.getNode("/instrumentation/airspeed-indicator[1]/indicated-speed-kt", 1);
 var ind_spd_mach_1 = props.globals.getNode("/instrumentation/airspeed-indicator[1]/indicated-mach", 1);
+var ind_spd_kt_2 = props.globals.getNode("/instrumentation/airspeed-indicator[2]/indicated-speed-kt", 1);
+var ind_spd_mach_2 = props.globals.getNode("/instrumentation/airspeed-indicator[2]/indicated-mach", 1);
 var at_mach_mode = props.globals.getNode("/it-autoflight/input/kts-mach", 1);
 var at_input_spd_mach = props.globals.getNode("/it-autoflight/input/spd-mach", 1);
 var at_input_spd_kts = props.globals.getNode("/it-autoflight/input/spd-kts", 1);
@@ -869,7 +873,14 @@ var canvas_PFD_1 = {
 	},
 	updateFast: func() {
 		# Airspeed
-		ind_spd_1 = ind_spd_kt_1.getValue();
+		if (air_switch.getValue() == -1) {
+			ind_spd_1 = ind_spd_kt_2.getValue();
+			ind_mach_1 = ind_spd_mach_2.getValue();
+		} else {
+			ind_spd_1 = ind_spd_kt.getValue();
+			ind_mach_1 = ind_spd_mach.getValue();
+		}
+		
 		# Subtract 30, since the scale starts at 30, but don't allow less than 0, or more than 420 situations
 		if (ind_spd_1 <= 30) {
 			ASI_1 = 0;
@@ -982,7 +993,14 @@ var canvas_PFD_1 = {
 		}
 		
 		# Altitude
-		me.altitude_1 = altitude.getValue();
+		if (air_switch.getValue() == -1) {
+			me.altitude_1 = altitude_2.getValue();
+			me.altitudep_1 = altitude_pfd_2.getValue();
+		} else {
+			me.altitude_1 = altitude.getValue();
+			me.altitudep_1 = altitude_pfd.getValue();
+		}
+		
 		me.altOffset_1 = me.altitude_1 / 500 - int(me.altitude_1 / 500);
 		me.middleAltText_1 = roundaboutAlt(me.altitude_1 / 100);
 		me.middleAltOffset_1 = nil;
@@ -999,8 +1017,8 @@ var canvas_PFD_1 = {
 		me["ALT_two"].setText(sprintf("%03d", abs(me.middleAltText_1-5)));
 		me["ALT_one"].setText(sprintf("%03d", abs(me.middleAltText_1-10)));
 		
-		me["ALT_digits"].setText(sprintf("%s", altitude_pfd_1.getValue()));
-		altTens_1 = num(right(sprintf("%02d", altitude_1.getValue()), 2));
+		me["ALT_digits"].setText(sprintf("%s", me.altitudep_1));
+		altTens_1 = num(right(sprintf("%02d", me.altitude_1), 2));
 		me["ALT_tens"].setTranslation(0, altTens_1 * 1.392);
 		
 		ap_alt_cur_1 = ap_alt.getValue();
@@ -1134,14 +1152,21 @@ var canvas_PFD_2 = {
 	},
 	updateFast: func() {
 		# Airspeed
-		ind_spd = ind_spd_kt.getValue();
+		if (air_switch.getValue() == 1) {
+			ind_spd_2 = ind_spd_kt_2.getValue();
+			ind_mach_2 = ind_spd_mach_2.getValue();
+		} else {
+			ind_spd_2 = ind_spd_kt_1.getValue();
+			ind_mach_2 = ind_spd_mach_1.getValue();
+		}
+			
 		# Subtract 30, since the scale starts at 30, but don't allow less than 0, or more than 420 situations
-		if (ind_spd <= 30) {
+		if (ind_spd_2 <= 30) {
 			ASI = 0;
-		} else if (ind_spd >= 420) {
+		} else if (ind_spd_2 >= 420) {
 			ASI = 390;
 		} else {
-			ASI = ind_spd - 30;
+			ASI = ind_spd_2 - 30;
 		}
 		
 		FMGC_max = FMGC_max_spd.getValue();
@@ -1156,8 +1181,7 @@ var canvas_PFD_2 = {
 		me["ASI_scale"].setTranslation(0, ASI * 6.6);
 		me["ASI_max"].setTranslation(0, ASImax * -6.6);
 		
-		ind_mach = ind_spd_mach.getValue();
-		if (ind_mach >= 0.5) {
+		if (ind_mach_2 >= 0.5) {
 			me["ASI_mach_decimal"].show();
 			me["ASI_mach"].show();
 		} else {
@@ -1165,10 +1189,10 @@ var canvas_PFD_2 = {
 			me["ASI_mach"].hide();
 		}
 		
-		if (ind_mach >= 0.999) {
+		if (ind_mach_2 >= 0.999) {
 			me["ASI_mach"].setText("999");
 		} else {
-			me["ASI_mach"].setText(sprintf("%3.0f", ind_mach * 1000));
+			me["ASI_mach"].setText(sprintf("%3.0f", ind_mach_2 * 1000));
 		}
 		
 		if (managed_spd.getValue() == 1) {
@@ -1194,7 +1218,7 @@ var canvas_PFD_2 = {
 			ASItrgt = tgt_ias - 30 - ASI;
 		}
 		
-		ASItrgtdiff = tgt_ias - ind_spd;
+		ASItrgtdiff = tgt_ias - ind_spd_2;
 		
 		if (ASItrgtdiff >= -42 and ASItrgtdiff <= 42) {
 			me["ASI_target"].setTranslation(0, ASItrgt * -6.6);
@@ -1247,9 +1271,16 @@ var canvas_PFD_2 = {
 		}
 		
 		# Altitude
-		me.altitude = altitude.getValue();
-		me.altOffset = me.altitude / 500 - int(me.altitude / 500);
-		me.middleAltText = roundaboutAlt(me.altitude / 100);
+		if (air_switch.getValue() == 1) {
+			me.altitude_2 = altitude_2.getValue();
+			me.altitudep_2 = altitude_pfd_2.getValue();
+		} else {
+			me.altitude_2 = altitude_1.getValue();
+			me.altitudep_2 = altitude_pfd_1.getValue();
+		}
+		
+		me.altOffset = me.altitude_2 / 500 - int(me.altitude_2 / 500);
+		me.middleAltText = roundaboutAlt(me.altitude_2 / 100);
 		me.middleAltOffset = nil;
 		if (me.altOffset > 0.5) {
 			me.middleAltOffset = -(me.altOffset - 1) * 243.3424;
@@ -1264,8 +1295,8 @@ var canvas_PFD_2 = {
 		me["ALT_two"].setText(sprintf("%03d", abs(me.middleAltText-5)));
 		me["ALT_one"].setText(sprintf("%03d", abs(me.middleAltText-10)));
 		
-		me["ALT_digits"].setText(sprintf("%s", altitude_pfd.getValue()));
-		altTens = num(right(sprintf("%02d", altitude.getValue()), 2));
+		me["ALT_digits"].setText(sprintf("%s", me.altitudep_2));
+		altTens = num(right(sprintf("%02d", me.altitude_2), 2));
 		me["ALT_tens"].setTranslation(0, altTens * 1.392);
 		
 		ap_alt_cur = ap_alt.getValue();
