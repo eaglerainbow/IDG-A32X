@@ -529,7 +529,7 @@
 			<checkbox>
 				<label>Standby Pitot</label>
 				<halign>left</halign>
-				<property>/fdm/jsbsim/systems/navigation/air-data/probes/stby-pitot-pressure-raw/malfunction/fail_stuck</property>
+				<property>/systems/failures/pitot[2]</property>
 				<binding>
 					<command>dialog-apply</command>
 				</binding>
@@ -559,7 +559,7 @@
 			<checkbox>
 				<label>Standby Static</label>
 				<halign>left</halign>
-				<property>/fdm/jsbsim/systems/navigation/air-data/probes/stby-static-pressure-raw/malfunction/fail_stuck</property>
+				<property>/systems/failures/static[2]</property>
 				<binding>
 					<command>dialog-apply</command>
 				</binding>

@@ -8,6 +8,32 @@
 -->
 
 <system name="A320: Navigation">
+	<channel name="System Toggles">
+		<switch name="systems/navigation/air-data/unit1/enabled">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				/controls/adirs/adr[0]/off ne 1
+				/controls/adirs/ir[0]/knob ne 0
+			</test>
+		</switch>
+		
+		<switch name="systems/navigation/air-data/unit2/enabled">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				/controls/adirs/adr[1]/off ne 1
+				/controls/adirs/ir[1]/knob ne 0
+			</test>
+		</switch>
+		
+		<switch name="systems/navigation/air-data/unit3/enabled">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				/controls/adirs/adr[2]/off ne 1
+				/controls/adirs/ir[2]/knob ne 0
+			</test>
+		</switch>
+	</channel>
+	
 	<channel name="Air Data">
 		<sensor name="systems/navigation/air-data/probes/capt-alpha-raw"> <!-- AOA sensor 2-->
 			<input>aero/alpha-deg</input>
@@ -62,7 +88,7 @@
 	
 	<!-- ADIRU 1
 		Source: CAPT probes -->
-	<channel name="ADIRU 3">
+	<channel name="ADIRU 1" execute="systems/navigation/air-data/unit1/enabled">
 		<fcs_function name="systems/navigation/air-data/unit1/true-airspeed-calculated"> <!-- https://en.wikipedia.org/wiki/True_airspeed#Calculating_true_airspeed -->
 			<function>
 				<product>
@@ -132,7 +158,7 @@
 	
 	<!-- ADIRU 2
 		Source: FO probes -->
-	<channel name="ADIRU 3">
+	<channel name="ADIRU 2" execute="systems/navigation/air-data/unit2/enabled">
 		<fcs_function name="systems/navigation/air-data/unit2/true-airspeed-calculated"> <!-- https://en.wikipedia.org/wiki/True_airspeed#Calculating_true_airspeed -->
 			<function>
 				<product>
@@ -202,7 +228,7 @@
 	
 	<!-- ADIRU 3
 		Source: STBY / CAPT probes -->
-	<channel name="ADIRU 3">
+	<channel name="ADIRU 3" execute="systems/navigation/air-data/unit3/enabled">
 		<fcs_function name="systems/navigation/air-data/unit3/true-airspeed-calculated"> <!-- https://en.wikipedia.org/wiki/True_airspeed#Calculating_true_airspeed -->
 			<function>
 				<product>
@@ -268,6 +294,7 @@
 				</quotient>
 			</function>
 		</fcs_function>
+		
 	</channel>
 	
 	

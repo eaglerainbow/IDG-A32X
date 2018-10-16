@@ -15,6 +15,11 @@ var dcbat = 0;
 var pwr_src = "XX";
 setprop("/controls/adirs/align-time", 600);
 
+var staticFailed = props.globals.initNode("/systems/failures/static[2]", 0, "DOUBLE");
+var pitotFailed = props.globals.initNode("/systems/failures/pitot[2]", 0, "DOUBLE");
+var stbyStaticServiceable = props.globals.getNode("/systems/static[2]/serviceable", 1);
+var stbyPitotServiceable = props.globals.getNode("/systems/pitot[2]/serviceable", 1);
+
 var ADIRS = {
 	init: func() {
 		setprop("/controls/adirs/numm", 0);
@@ -100,6 +105,20 @@ var ADIRS = {
 		} else {
 			setprop("/controls/adirs/onbat", 0);
 		}
+		
+		if (staticFailed.getValue() == 1) {
+			stbyStaticServiceable.setBoolValue(0);
+		} else {
+			stbyStaticServiceable.setBoolValue(1);
+		}
+		
+		if (pitotFailed.getValue() == 1) {
+			stbyPitotServiceable.setBoolValue(0);
+		} else {
+			stbyPitotServiceable.setBoolValue(1);
+		}
+		
+		me.ADRbtn(3);
 	},
 	knob: func(k) {
 		knob = getprop("/controls/adirs/ir[" ~ k ~ "]/knob");
@@ -109,6 +128,13 @@ var ADIRS = {
 			me.beginAlign(k);
 		} else if (knob == 2) {
 			me.beginAlign(k);
+		}
+	},
+	ADRbtn: func(n) {
+		for (var i=0; i > n; i = i + 1) { 
+			if ((getprop("/instrumentation/adirs/adr[" ~ i ~ "]/active") == 1) and (getprop("controls/adirs/adr[" ~ i ~ "]/off") == 1 or getprop("controls/adirs/ir[" ~ i ~ "]/knob") == 0)) {
+				setprop("/instrumentation/adirs/adr[" ~ i ~ "]/active", 0);
+			}
 		}
 	},
 	beginAlign: func(n) {
