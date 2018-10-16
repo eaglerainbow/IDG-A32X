@@ -10,4 +10,29 @@
 
 	<path>res/Pedestal_up.ac</path>
 	
+	<animation>
+		<object-name>ecam_air_data</object-name>
+		<type>knob</type>
+		<property>controls/switching/AIRDATA</property>
+		<center>
+            <x-m>-0.43877</x-m>
+			<y-m>-0.02255</y-m>
+			<z-m>-0.13035</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+			<y>0</y>
+			<z>-1</z>
+        </axis>
+		<factor>50</factor>
+		<action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/switching/AIRDATA</property>
+                <min>-1</min>
+                <max>1</max>                
+                <wrap>false</wrap>
+            </binding>
+        </action>
+	</animation>
 </PropertyList>
