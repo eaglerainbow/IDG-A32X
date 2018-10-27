@@ -1001,6 +1001,14 @@
 		<altimeter n="2">
 			<serviceable type="bool" archive="y">true</serviceable>
 		</altimeter>
+		
+		<vertical-speed-indicator n="1">
+			<serviceable type="bool" archive="y">true</serviceable>
+		</vertical-speed-indicator>
+		
+		<vertical-speed-indicator n="2">
+			<serviceable type="bool" archive="y">true</serviceable>
+		</vertical-speed-indicator>
 	</instrumentation>
 	
 	<modes>
