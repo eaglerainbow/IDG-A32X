@@ -11,8 +11,39 @@
 	<path>res/Pedestal_up.ac</path>
 	
 	<animation>
+		<type>pick</type>
 		<object-name>ecam_air_data</object-name>
-		<type>knob</type>
+		<action>
+			<button>0</button>
+			<button>3</button>
+			<repeatable type="bool">true</repeatable>
+			<binding>
+				<command>property-cycle</command>
+				<property>controls/switching/AIRDATA</property>
+				<value>-1</value>
+				<value>0</value>
+				<value>1</value>
+				<wrap>0</wrap>
+			</binding>
+		</action>
+		<action>
+			<button>1</button>
+			<button>4</button>
+			<repeatable type="bool">true</repeatable>
+			<binding>
+				<command>property-cycle</command>
+				<property>controls/switching/AIRDATA</property>
+				<value>1</value>
+				<value>0</value>
+				<value>-1</value>
+				<wrap>0</wrap>
+			</binding>
+		</action>
+	</animation>
+	
+	<animation>
+		<object-name>ecam_air_data</object-name>
+		<type>rotate</type>
 		<property>controls/switching/AIRDATA</property>
 		<center>
             <x-m>-0.43877</x-m>
@@ -25,14 +56,5 @@
 			<z>1</z>
         </axis>
 		<factor>-60</factor>
-		<action>
-            <binding>
-                <command>property-adjust</command>
-                <property>controls/switching/AIRDATA</property>
-                <min>-1</min>
-                <max>1</max>                
-                <wrap>false</wrap>
-            </binding>
-        </action>
 	</animation>
 </PropertyList>
