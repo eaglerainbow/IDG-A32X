@@ -144,6 +144,8 @@ var hdg_scale = props.globals.initNode("/instrumentation/pfd/heading-scale", 0.0
 var track = props.globals.initNode("/instrumentation/pfd/track-deg", 0.0, "DOUBLE");
 var track_diff = props.globals.initNode("/instrumentation/pfd/track-hdg-diff", 0.0, "DOUBLE");
 var speed_pred = props.globals.initNode("/instrumentation/pfd/speed-lookahead", 0.0, "DOUBLE");
+var speed_pred_2 = props.globals.initNode("/instrumentation/pfd/speed-lookahead-2", 0.0, "DOUBLE");
+var speed_pred_3 = props.globals.initNode("/instrumentation/pfd/speed-lookahead-3", 0.0, "DOUBLE");
 var du1_test = props.globals.initNode("/instrumentation/du/du1-test", 0, "BOOL");
 var du1_test_time = props.globals.initNode("/instrumentation/du/du1-test-time", 0.0, "DOUBLE");
 var du1_test_amount = props.globals.initNode("/instrumentation/du/du1-test-amount", 0.0, "DOUBLE");
@@ -890,6 +892,12 @@ var canvas_PFD_1 = {
 			ASI_1 = ind_spd_1 - 30;
 		}
 		
+		if (air_switch.getValue() == -1) {
+			ASItrend_1 = speed_pred_3.getValue() - ASI_1;
+		} else {
+			ASItrend_1 = speed_pred.getValue() - ASI_1;
+		}
+		
 		FMGC_max_1 = FMGC_max_spd.getValue();
 		if (FMGC_max_1 <= 30) {
 			ASImax_1 = 0 - ASI_1;
@@ -977,7 +985,6 @@ var canvas_PFD_1 = {
 			me["ASI_target"].hide();
 		}
 		
-		ASItrend_1 = speed_pred.getValue() - ASI_1;
 		me["ASI_trend_up"].setTranslation(0, math.clamp(ASItrend_1, 0, 50) * -6.6);
 		me["ASI_trend_down"].setTranslation(0, math.clamp(ASItrend_1, -50, 0) * -6.6);
 		
@@ -1169,6 +1176,12 @@ var canvas_PFD_2 = {
 			ASI = ind_spd_2 - 30;
 		}
 		
+		if (air_switch.getValue() == 1) {
+			ASItrend = speed_pred_3.getValue() - ASI;
+		} else {
+			ASItrend = speed_pred_2.getValue() - ASI;
+		}
+		
 		FMGC_max = FMGC_max_spd.getValue();
 		if (FMGC_max <= 30) {
 			ASImax = 0 - ASI;
@@ -1255,7 +1268,6 @@ var canvas_PFD_2 = {
 			me["ASI_target"].hide();
 		}
 		
-		ASItrend = speed_pred.getValue() - ASI;
 		me["ASI_trend_up"].setTranslation(0, math.clamp(ASItrend, 0, 50) * -6.6);
 		me["ASI_trend_down"].setTranslation(0, math.clamp(ASItrend, -50, 0) * -6.6);
 		
