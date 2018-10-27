@@ -22,9 +22,9 @@
         <axis>
             <x>0</x>
 			<y>0</y>
-			<z>-1</z>
+			<z>1</z>
         </axis>
-		<factor>50</factor>
+		<factor>-60</factor>
 		<action>
             <binding>
                 <command>property-adjust</command>
