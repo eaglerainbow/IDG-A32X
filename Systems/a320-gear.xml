@@ -1,0 +1,196 @@
+<!-- Airbus A320 FCS -->
+<!-- Jonathan Redpath -->
+
+<!--
+##############################################
+# Copyright (c) Jonathan Redpath			 #
+##############################################
+-->
+
+<system name="A320: Gear">
+	<property value="1">systems/lgciu/safety-valve-cmd</property>
+	<property value="0">/systems/electrical/gen-ext</property>
+	<property value="0">/controls/adirs/adr[3]/fault</property>
+	
+	<channel name="Proximity Detectors and Outputs">
+		<switch name="systems/lgciu/outputs/num1">
+			<default value="0" />
+			<test logic="AND" value="1">
+				/gear/gear[2]/compression-norm ge 0.001
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num2">
+			<default value="0" />
+			<test logic="OR" value="1">
+				systems/lgciu/outputs/num1 eq 1
+				/systems/electrical/gen-ext eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num3">
+			<default value="0" />
+			<test logic="AND" value="1">
+				/gear/gear[1]/compression-norm ge 0.001
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num4">
+			<default value="0" />
+			<test logic="OR" value="1">
+				systems/lgciu/outputs/num3 eq 1
+				/systems/electrical/gen-ext eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num5">
+			<default value="0" />
+			<test logic="AND" value="1">
+				/gear/gear[1]/compression-norm ge 0.001
+				/gear/gear[2]/compression-norm ge 0.001
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num6">
+			<default value="0" />
+			<test logic="OR" value="1">
+				systems/lgciu/outputs/num5 eq 1
+				/systems/electrical/gen-ext eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num7">
+			<default value="0" />
+			<test logic="AND" value="1">
+				/gear/gear[0]/compression-norm ge 0.001
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num8">
+			<default value="0" />
+			<test logic="OR" value="1">
+				systems/lgciu/outputs/num7 eq 1
+				/systems/electrical/gen-ext eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num9">
+			<default value="0" />
+			<test logic="AND" value="1">
+				/gear/gear[1]/compression-norm lt 0.001
+				/gear/gear[2]/compression-norm lt 0.001
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num10">
+			<default value="0" />
+			<test logic="AND" value="1">
+				systems/lgciu/outputs/num9 eq 1
+				/gear/gear[0]/compression-norm lt 0.001
+			</test>
+		</switch>
+	</channel>
+	
+	<channel name="Gear Lever">
+		<switch name="systems/lgciu/retraction-interlock">
+			<default value="0"/>
+			<test logic="OR" value="1">
+				systems/lgciu/outputs/num1 eq 1
+				systems/lgciu/outputs/num3 eq 1
+				fcs/steer-pos-deg[0] ne 0
+			</test>
+		</switch>
+		
+		<kinematic name="lever">
+			<input>/controls/gear/lever-cmd</input>
+			<traverse>
+				<setting>
+					<position>0</position>
+					<time>0 </time>
+				</setting>
+				<setting>
+					<position>1</position>
+					<time>0.33</time>
+				</setting>
+			</traverse>
+			<output>/controls/gear/lever-pos</output>
+		</kinematic>
+		
+		<switch name="rubbish/gear-command">
+			<output>gear/gear-command</output>
+			<default value="0"/>
+			<test logic="OR" value="0">
+				/controls/gear/lever-pos eq 0
+			</test>
+			<test logic="OR" value="1">
+				/controls/gear/lever-pos eq 1
+			</test>
+		</switch>
+	</channel>
+	
+	<channel name="Valves">
+		<switch name="systems/lgciu/adr-1-3-flt">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				/controls/adirs/adr[0]/fault eq 1
+				/controls/adirs/adr[3]/fault eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/safety-valve-logic">
+			<default value="0"/>
+			<test logic="OR" value="1">
+				systems/lgciu/adr-1-3-flt eq 0
+				/instrumentation/airspeed-indicator/indicated-speed-kt lt 260
+				systems/lgciu/outputs/num6 eq 1
+			</test>
+		</switch>
+		
+		<kinematic name="safety-valve">
+			<input>systems/lgciu/safety-valve-cmd</input> <!-- controlled by nasal -->
+			<traverse>
+				<setting>
+					<position>0</position>
+					<time>0 </time>
+				</setting>
+				<setting>
+					<position>1</position>
+					<time>0.5</time>
+				</setting>
+			</traverse>
+			<output>systems/lgciu/safety-valve-pos</output>
+		</kinematic>
+		
+		<switch name="systems/lgciu/cutoff-valve-cmd">
+			<default value="1" />
+			<test logic="OR" value="0">
+				/controls/gear/emerg-extend eq 1
+			</test>
+		</switch>
+		
+		<kinematic name="cutoff-valve">
+			<input>systems/lgciu/cutoff-valve-cmd</input>
+			<traverse>
+				<setting>
+					<position>0</position>
+					<time>0 </time>
+				</setting>
+				<setting>
+					<position>1</position>
+					<time>0.5</time>
+				</setting>
+			</traverse>
+			<output>systems/lgciu/cutoff-valve-pos</output>
+		</kinematic>
+		
+		<switch name="systems/lgciu/hyd-pwr">
+			<default value="1"/>
+			<test logic="OR" value="0">
+				/systems/hydraulic/green-psi lt 1500
+				systems/lgciu/safety-valve-pos eq 0
+				systems/lgciu/cutoff-valve-pos eq 0
+			</test>
+		</switch>
+	</channel>
+
+</system>

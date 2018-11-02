@@ -44,6 +44,11 @@ var brake_r = 0;
 var brake_nose = 0;
 var counter = 0;
 var down = 0;
+var airspeed = 0;
+var mlg = 0;
+var hasBeenAbove260 = 0;
+var lever = 0;
+var safetyCond = 0;
 
 var HYD = {
 	init: func() {
@@ -260,8 +265,36 @@ var HYD = {
 		} else {
 			setprop("/systems/hydraulic/elec-pump-y-fault", 0);
 		}
+		
+		airspeed = getprop("/instrumentation/airspeed-indicator/indicated-speed-kt");
+		mlg = getprop("/fdm/jsbsim/systems/lgciu/outputs/num6");
+		lever = getprop("/controls/gear/lever-pos");
+		safetyCond = getprop("/fdm/jsbsim/systems/lgciu/safety-valve-logic");
+		hasBeenAbove260 = getprop("/systems/hydraulic/has-been-above-260");
+		
+		if (airspeed > 260) {
+			hasBeenAbove260 = 1;
+		}
+		
+		if (airspeed < 260 and lever == 1) {
+			hasBeenAbove260 = 0;
+		}
+		
+		if (hasBeenAbove260 == 1 and lever == 0) {
+			setprop("/fdm/jsbsim/systems/lgciu/safety-valve-cmd", 0);
+		} elsif (safetyCond == 1 and (lever == 1 or hasBeenAbove260 == 0)) {
+			setprop("/fdm/jsbsim/systems/lgciu/safety-valve-cmd", 1);
+		}
 	},
 };
+
+setlistener("/FMGC/status/phase", func {
+	phase = getprop("/FMGC/status/phase");
+	hasBeenAbove260 = getprop("/systems/hydraulic/has-been-above-260");
+	if (phase == 7) {
+		setprop("/systems/hydraulic/has-been-above-260", 0);
+	}
+});
 
 setlistener("/controls/gear/gear-down", func {
 	down = getprop("/controls/gear/gear-down");

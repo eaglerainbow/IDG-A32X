@@ -590,6 +590,9 @@
 			<brake-parking type="bool">0</brake-parking>
 			<tiller-cmd-norm type="double">0</tiller-cmd-norm>
 			<tiller-enabled type="bool">0</tiller-enabled>
+			<emerg-extend type="bool">0</emerg-extend>
+			<lever-cmd type="bool">1</lever-cmd>
+			<lever-pos type="double">1</lever-pos>
 		</gear>
 		<lighting>
 			<DU>
@@ -1294,6 +1297,15 @@
 					</script>
 				</binding>
 			</key>
+			<key n="71">
+				<name>G</name>
+				<desc>Gear Down Custom Binding</desc>
+				<binding>
+					<command>property-assign</command>
+					<property>/controls/gear/lever-cmd</property>
+					<value>1</value>
+				</binding>
+			</key>
 			<key n="88">
 				<name>X</name>
 				<desc>Increase field of view</desc>
@@ -1301,6 +1313,23 @@
 				<binding>
 					<command>nasal</command>
 					<script>libraries.fovZoom(1);</script>
+				</binding>
+			</key>
+			<key n="103">
+				<name>g</name>
+				<desc>Gear Up Custom Binding</desc>
+				<binding>
+					<condition>
+						<not>
+							<equals>
+								<property>fdm/jsbsim/systems/lgciu/retraction-interlock</property>
+								<value>1</value>
+							</equals>
+						</not>
+					</condition>
+					<command>property-assign</command>
+					<property>/controls/gear/lever-cmd</property>
+					<value>0</value>
 				</binding>
 			</key>
 			<key n="120">

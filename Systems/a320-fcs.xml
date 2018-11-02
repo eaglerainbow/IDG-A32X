@@ -31,6 +31,8 @@
 	<property value="0">fbw/fmgc/pitch-cmd</property>
 	<property value="0">fbw/fmgc/yaw-cmd</property>
 	
+	<property value="0">systems/lgciu/hyd-pwr</property>
+	<property value="1">gear/gear-command</property>
 	<channel name="Libraries">
 		
 		<switch name="position/wow">
@@ -1866,24 +1868,27 @@
 		</aerosurface_scale>
 	
 	</channel>
-	
 	<channel name="Landing Gear">
+		<switch name="fcs/gear-pos-rate">
+			<default value="0.0"/>
+			<test logic="AND" value="0.1">
+				systems/lgciu/hyd-pwr eq 1
+				gear/gear-command eq 0
+			</test>
+			<test logic="AND" value="0.0833">
+				systems/lgciu/hyd-pwr eq 1
+				gear/gear-command eq 1
+			</test>
+			<test logic="AND" value="0.2">
+				/controls/gear/emerg-extend eq 1
+			</test>
+		</switch>
 		
-		<kinematic name="rubbish/gear-pos-norm">
-			<input>gear/gear-cmd-norm</input>
-			<traverse>
-				<setting>
-					<position>0</position>
-					<time>0</time>
-				</setting>
-				<setting>
-					<position>1</position>
-					<time>10</time>
-				</setting>
-			</traverse>
+		<actuator name="rubbish/gear-pos-norm">
+			<input>gear/gear-command</input>
+			<rate_limit>0.1</rate_limit>
 			<output>gear/gear-pos-norm</output>
-		</kinematic>
-	
+		</actuator>
 	</channel>
 	
 	<channel name="Tiller">

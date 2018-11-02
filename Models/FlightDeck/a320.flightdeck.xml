@@ -4431,7 +4431,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>gear_lever</object-name>
-		<property>controls/gear/gear-down</property>
+		<property>/controls/gear/lever-pos</property>
 		<factor>50</factor>
 		<center>
 			<x-m>-0.55056</x-m>
@@ -4452,8 +4452,42 @@
 			<button>0</button>
 			<repeatable>false</repeatable>
 			<binding>
+				<condition>
+					<not>
+						<equals>
+							<property>fdm/jsbsim/systems/lgciu/retraction-interlock</property>
+							<value>1</value>
+						</equals>
+					</not>
+				</condition>
 				<command>property-toggle</command>
-				<property>controls/gear/gear-down</property>
+				<property>/controls/gear/lever-cmd</property>
+			</binding>
+		</action>
+		<action>
+			<button>3</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<condition>
+					<not>
+						<equals>
+							<property>fdm/jsbsim/systems/lgciu/retraction-interlock</property>
+							<value>1</value>
+						</equals>
+					</not>
+				</condition>
+				<command>property-assign</command>
+				<property>/controls/gear/lever-cmd</property>
+				<value>0</value>
+			</binding>
+		</action>
+		<action>
+			<button>4</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-assign</command>
+				<property>/controls/gear/lever-cmd</property>
+				<value>1</value>
 			</binding>
 		</action>
 	</animation>
