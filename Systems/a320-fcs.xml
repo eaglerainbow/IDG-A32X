@@ -32,6 +32,7 @@
 	<property value="0">fbw/fmgc/yaw-cmd</property>
 	
 	<property value="0">systems/lgciu/hyd-pwr</property>
+	<property value="0">systems/lgciu/outputs/num8</property>
 	<property value="0">systems/lgciu/input/doors-cmd-nose</property>
 	<property value="0">systems/lgciu/input/doors-cmd-left</property>
 	<property value="0">systems/lgciu/input/doors-cmd-right</property>
@@ -2048,17 +2049,32 @@
 					<independentVar lookup="row">/velocities/groundspeed-kt</independentVar>
 					<independentVar lookup="column">hydraulics/tiller/switch</independentVar>
 					<tableData>
-						       -1     0  1
-						30.000 -70.0  0  70.0
-						30.001 -10.0  0  10.0
+						        -1     0  1
+						 40.000 -75.0  0  75.0
+						 40.001  -6.0  0   6.0
+						130.000   0.0  0   0.0
 					</tableData>
 				</table>
 			</function>
 		</fcs_function>
 		
+		<switch name="fcs/tiller-steer-deg"> <!-- return to 0 after takeoff -->
+			<default value="0"/>
+			<test value="hydraulics/tiller/function">
+				systems/lgciu/outputs/num8 eq 1
+			</test>
+		</switch>
+		
+		<switch name="fcs/tiller-rate">
+			<default value="0"/>
+			<test value="70">
+				/systems/hydraulic/yellow-psi gt 1500
+			</test>
+		</switch>
+		
 		<actuator name="fcs/steer-deg">
-			<input>hydraulics/tiller/function</input>
-			<rate_limit>70</rate_limit>
+			<input>fcs/tiller-steer-deg</input>
+			<rate_limit>fcs/tiller-rate</rate_limit>
 			<output>fcs/steer-pos-deg[0]</output>
 		</actuator>
 		

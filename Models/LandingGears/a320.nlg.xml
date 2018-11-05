@@ -217,7 +217,7 @@
 		<object-name>LINK.01</object-name>
 		<object-name>LINK.02</object-name>
 		<property>sim/multiplay/generic/float[1]</property>
-		<factor>70</factor>
+		<factor>75</factor>
 		<axis>
 			<x1-m>0</x1-m>
 			<y1-m>0</y1-m>
