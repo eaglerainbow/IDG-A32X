@@ -32,7 +32,15 @@
 	<property value="0">fbw/fmgc/yaw-cmd</property>
 	
 	<property value="0">systems/lgciu/hyd-pwr</property>
-	<property value="1">gear/gear-command</property>
+	<property value="0">systems/lgciu/input/doors-cmd-nose</property>
+	<property value="0">systems/lgciu/input/doors-cmd-left</property>
+	<property value="0">systems/lgciu/input/doors-cmd-right</property>
+	<property value="1">gear/gear-cmd-nose</property>
+	<property value="1">gear/gear-cmd-left</property>
+	<property value="1">gear/gear-cmd-right</property>
+	<property value="0">gear/unit[0]/door-pos-norm</property>
+	<property value="0">gear/unit[1]/door-pos-norm</property>
+	<property value="0">gear/unit[2]/door-pos-norm</property>
 	<channel name="Libraries">
 		
 		<switch name="position/wow">
@@ -1868,26 +1876,156 @@
 		</aerosurface_scale>
 	
 	</channel>
+	
 	<channel name="Landing Gear">
-		<switch name="fcs/gear-pos-rate">
+		<switch name="fcs/gear-pos-rate-nose">
 			<default value="0.0"/>
-			<test logic="AND" value="0.1">
-				systems/lgciu/hyd-pwr eq 1
-				gear/gear-command eq 0
+			<test logic="OR" value="0.0">
+				gear/unit[0]/door-pos-norm ne 1
+				gear/unit[1]/door-pos-norm ne 1
+				gear/unit[2]/door-pos-norm ne 1
 			</test>
 			<test logic="AND" value="0.0833">
 				systems/lgciu/hyd-pwr eq 1
-				gear/gear-command eq 1
+				gear/gear-cmd-nose eq 0
+				gear/unit[0]/door-pos-norm eq 1
+				gear/unit[1]/door-pos-norm eq 1
+				gear/unit[2]/door-pos-norm eq 1
+			</test>
+			<test logic="AND" value="0.125">
+				systems/lgciu/hyd-pwr eq 1
+				gear/gear-cmd-nose eq 1
+				gear/unit[0]/door-pos-norm eq 1
+				gear/unit[1]/door-pos-norm eq 1
+				gear/unit[2]/door-pos-norm eq 1
 			</test>
 			<test logic="AND" value="0.2">
 				/controls/gear/emerg-extend eq 1
+				gear/unit[0]/door-pos-norm eq 1
+				gear/unit[1]/door-pos-norm eq 1
+				gear/unit[2]/door-pos-norm eq 1
 			</test>
 		</switch>
 		
-		<actuator name="rubbish/gear-pos-norm">
-			<input>gear/gear-command</input>
-			<rate_limit>0.1</rate_limit>
-			<output>gear/gear-pos-norm</output>
+		<switch name="fcs/gear-pos-rate-left">
+			<default value="0.0"/>
+			<test logic="OR" value="0.0">
+				gear/unit[0]/door-pos-norm ne 1
+				gear/unit[1]/door-pos-norm ne 1
+				gear/unit[2]/door-pos-norm ne 1
+			</test>
+			<test logic="AND" value="0.0833">
+				systems/lgciu/hyd-pwr eq 1
+				gear/gear-cmd-left eq 0
+				gear/unit[0]/door-pos-norm eq 1
+				gear/unit[1]/door-pos-norm eq 1
+				gear/unit[2]/door-pos-norm eq 1
+			</test>
+			<test logic="AND" value="0.125">
+				systems/lgciu/hyd-pwr eq 1
+				gear/gear-cmd-left eq 1
+				gear/unit[0]/door-pos-norm eq 1
+				gear/unit[1]/door-pos-norm eq 1
+				gear/unit[2]/door-pos-norm eq 1
+			</test>
+			<test logic="AND" value="0.2">
+				/controls/gear/emerg-extend eq 1
+				gear/unit[0]/door-pos-norm eq 1
+				gear/unit[1]/door-pos-norm eq 1
+				gear/unit[2]/door-pos-norm eq 1
+			</test>
+		</switch>
+		
+		<switch name="fcs/gear-pos-rate-right">
+			<default value="0.0"/>
+			<test logic="OR" value="0.0">
+				gear/unit[0]/door-pos-norm ne 1
+				gear/unit[1]/door-pos-norm ne 1
+				gear/unit[2]/door-pos-norm ne 1
+			</test>
+			<test logic="AND" value="0.0833">
+				systems/lgciu/hyd-pwr eq 1
+				gear/gear-cmd-right eq 0
+				gear/unit[0]/door-pos-norm eq 1
+				gear/unit[1]/door-pos-norm eq 1
+				gear/unit[2]/door-pos-norm eq 1
+			</test>
+			<test logic="AND" value="0.125">
+				systems/lgciu/hyd-pwr eq 1
+				gear/gear-cmd-right eq 1
+				gear/unit[0]/door-pos-norm eq 1
+				gear/unit[1]/door-pos-norm eq 1
+				gear/unit[2]/door-pos-norm eq 1
+			</test>
+			<test logic="AND" value="0.2">
+				/controls/gear/emerg-extend eq 1
+				gear/unit[0]/door-pos-norm eq 1
+				gear/unit[1]/door-pos-norm eq 1
+				gear/unit[2]/door-pos-norm eq 1
+			</test>
+		</switch>
+		
+		<kinematic name="rubbish/doors-nose">
+			<input>systems/lgciu/input/doors-cmd-nose</input>
+			<traverse>
+				<setting>
+					<position>0</position>
+					<time>0</time>
+				</setting>
+				<setting>
+					<position>1</position>
+					<time>4.5</time>
+				</setting>
+			</traverse>
+			<output>gear/unit[0]/door-pos-norm</output>
+		</kinematic>
+		
+		<kinematic name="rubbish/doors-left">
+			<input>systems/lgciu/input/doors-cmd-left</input>
+			<traverse>
+				<setting>
+					<position>0</position>
+					<time>0</time>
+				</setting>
+				<setting>
+					<position>1</position>
+					<time>6</time>
+				</setting>
+			</traverse>
+			<output>gear/unit[1]/door-pos-norm</output>
+		</kinematic>
+		
+		<kinematic name="rubbish/doors-right">
+			<input>systems/lgciu/input/doors-cmd-right</input>
+			<traverse>
+				<setting>
+					<position>0</position>
+					<time>0</time>
+				</setting>
+				<setting>
+					<position>1</position>
+					<time>6</time>
+				</setting>
+			</traverse>
+			<output>gear/unit[2]/door-pos-norm</output>
+		</kinematic>
+		
+		<actuator name="rubbish/gear-pos-norm-nose">
+			<input>gear/gear-cmd-nose</input>
+			<rate_limit>fcs/gear-pos-rate-nose</rate_limit>
+			<output>gear/unit[0]/pos-norm</output>
+		</actuator>
+		
+		<actuator name="rubbish/gear-pos-norm-left">
+			<input>gear/gear-cmd-left</input>
+			<rate_limit>fcs/gear-pos-rate-left</rate_limit>
+			<output>gear/unit[1]/pos-norm</output>
+		</actuator>
+		
+		<actuator name="rubbish/gear-pos-norm-right">
+			<input>gear/gear-cmd-right</input>
+			<rate_limit>fcs/gear-pos-rate-right</rate_limit>
+			<output>gear/unit[2]/pos-norm</output>
 		</actuator>
 	</channel>
 	

@@ -729,11 +729,9 @@
 		<input>
 			<expression>
 				<table>
-					<property>/gear/gear[1]/position-norm</property>
+					<property>fdm/jsbsim/gear/unit[1]/door-pos-norm</property>
 					<entry><ind>0.00</ind><dep>0</dep></entry>
-					<entry><ind>0.19</ind><dep>1</dep></entry>
-					<entry><ind>0.81</ind><dep>1</dep></entry>
-					<entry><ind>1.00</ind><dep>0</dep></entry>
+					<entry><ind>1.00</ind><dep>1</dep></entry>
 				</table>
 			</expression>
 		</input>
@@ -765,11 +763,9 @@
 		<input>
 			<expression>
 				<table>
-					<property>/gear/gear[2]/position-norm</property>
+					<property>fdm/jsbsim/gear/unit[2]/door-pos-norm</property>
 					<entry><ind>0.00</ind><dep>0</dep></entry>
-					<entry><ind>0.19</ind><dep>1</dep></entry>
-					<entry><ind>0.81</ind><dep>1</dep></entry>
-					<entry><ind>1.00</ind><dep>0</dep></entry>
+					<entry><ind>1.00</ind><dep>1</dep></entry>
 				</table>
 			</expression>
 		</input>
@@ -801,11 +797,9 @@
 		<input>
 			<expression>
 				<table>
-					<property>/gear/gear[0]/position-norm</property>
+					<property>fdm/jsbsim/gear/unit[0]/door-pos-norm</property>
 					<entry><ind>0.00</ind><dep>0</dep></entry>
-					<entry><ind>0.19</ind><dep>1</dep></entry>
-					<entry><ind>0.81</ind><dep>1</dep></entry>
-					<entry><ind>1.00</ind><dep>0</dep></entry>
+					<entry><ind>1.00</ind><dep>1</dep></entry>
 				</table>
 			</expression>
 		</input>

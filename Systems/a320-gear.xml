@@ -89,14 +89,64 @@
 				/gear/gear[0]/compression-norm lt 0.001
 			</test>
 		</switch>
+		
+		<switch name="systems/lgciu/outputs/num20">
+			<default value="0" />
+			<test logic="AND" value="1">
+				gear/unit[1]/door-pos-norm eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num21">
+			<default value="0" />
+			<test logic="AND" value="1">
+				gear/unit[2]/door-pos-norm eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num2223">
+			<default value="0" />
+			<test logic="AND" value="1">
+				gear/unit[0]/door-pos-norm eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num24">
+			<default value="0" />
+			<test logic="AND" value="1">
+				systems/lgciu/outputs/num20 eq 1
+				systems/lgciu/outputs/num21 eq 1
+				systems/lgciu/outputs/num2223 eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num25">
+			<default value="0" />
+			<test logic="AND" value="1">
+				gear/unit[1]/door-pos-norm eq 0
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num26">
+			<default value="0" />
+			<test logic="AND" value="1">
+				gear/unit[2]/door-pos-norm eq 0
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/outputs/num27">
+			<default value="0" />
+			<test logic="AND" value="1">
+				gear/unit[0]/door-pos-norm eq 0
+			</test>
+		</switch>
 	</channel>
 	
 	<channel name="Gear Lever">
 		<switch name="systems/lgciu/retraction-interlock">
 			<default value="0"/>
 			<test logic="OR" value="1">
-				systems/lgciu/outputs/num1 eq 1
-				systems/lgciu/outputs/num3 eq 1
+				systems/lgciu/outputs/num10 ne 1
 				fcs/steer-pos-deg[0] ne 0
 			</test>
 		</switch>
@@ -110,20 +160,153 @@
 				</setting>
 				<setting>
 					<position>1</position>
-					<time>0.33</time>
+					<time>0.75</time>
 				</setting>
 			</traverse>
 			<output>/controls/gear/lever-pos</output>
 		</kinematic>
 		
-		<switch name="rubbish/gear-command">
-			<output>gear/gear-command</output>
+		<switch name="systems/lgciu/input/doors-cmd-nose">
+			<default value="0"/>
+			<test logic="AND" value="0">
+				systems/lgciu/hyd-pwr eq 0
+				gear/unit[0]/door-pos-norm eq 0
+				/controls/gear/emerg-extend eq 0
+			</test>
+			<test logic="AND" value="1">
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="AND" value="1">
+				systems/lgciu/hyd-pwr eq 0
+				gear/unit[0]/door-pos-norm ne 0
+			</test>
+			<test logic="AND" value="0">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 0
+				gear/unit[0]/pos-norm eq 0
+			</test>
+			<test logic="AND" value="1">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 0
+				gear/unit[0]/pos-norm gt 0
+			</test>
+			<test logic="AND" value="1">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 1
+				gear/unit[0]/pos-norm lt 1
+			</test>
+			<test logic="AND" value="0">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 1
+				gear/unit[0]/pos-norm eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/input/doors-cmd-left">
+			<default value="0"/>
+			<test logic="AND" value="0">
+				systems/lgciu/hyd-pwr eq 0
+				gear/unit[1]/door-pos-norm eq 0
+				/controls/gear/emerg-extend eq 0
+			</test>
+			<test logic="AND" value="1">
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="AND" value="1">
+				systems/lgciu/hyd-pwr eq 0
+				gear/unit[1]/door-pos-norm ne 0
+			</test>
+			<test logic="AND" value="0">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 0
+				gear/unit[1]/pos-norm eq 0
+			</test>
+			<test logic="AND" value="1">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 0
+				gear/unit[1]/pos-norm gt 0
+			</test>
+			<test logic="AND" value="1">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 1
+				gear/unit[1]/pos-norm lt 1
+			</test>
+			<test logic="AND" value="0">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 1
+				gear/unit[1]/pos-norm eq 1
+			</test>
+		</switch>
+		
+		<switch name="systems/lgciu/input/doors-cmd-right">
+			<default value="0"/>
+			<test logic="AND" value="0">
+				systems/lgciu/hyd-pwr eq 0
+				gear/unit[2]/door-pos-norm eq 0
+				/controls/gear/emerg-extend eq 0
+			</test>
+			<test logic="AND" value="1">
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="AND" value="1">
+				systems/lgciu/hyd-pwr eq 0
+				gear/unit[2]/door-pos-norm ne 0
+			</test>
+			<test logic="AND" value="0">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 0
+				gear/unit[2]/pos-norm eq 0
+			</test>
+			<test logic="AND" value="1">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 0
+				gear/unit[2]/pos-norm gt 0
+			</test>
+			<test logic="AND" value="1">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 1
+				gear/unit[2]/pos-norm lt 1
+			</test>
+			<test logic="AND" value="0">
+				systems/lgciu/hyd-pwr eq 1
+				/controls/gear/lever-pos eq 1
+				gear/unit[2]/pos-norm eq 1
+			</test>
+		</switch>
+		
+		<switch name="rubbish/gear-command-nose">
+			<output>gear/gear-cmd-nose</output>
 			<default value="0"/>
 			<test logic="OR" value="0">
 				/controls/gear/lever-pos eq 0
 			</test>
 			<test logic="OR" value="1">
 				/controls/gear/lever-pos eq 1
+				/controls/gear/emerg-extend eq 1
+			</test>
+		</switch>
+		
+		<switch name="rubbish/gear-command-left">
+			<output>gear/gear-cmd-left</output>
+			<default value="0"/>
+			<test logic="OR" value="0">
+				/controls/gear/lever-pos eq 0
+			</test>
+			<test logic="OR" value="1">
+				/controls/gear/lever-pos eq 1
+				/controls/gear/emerg-extend eq 1
+			</test>
+		</switch>
+		
+		<switch name="rubbish/gear-command-right">
+			<output>gear/gear-cmd-right</output>
+			<default value="0"/>
+			<test logic="OR" value="0">
+				/controls/gear/lever-pos eq 0
+			</test>
+			<test logic="OR" value="1">
+				/controls/gear/lever-pos eq 1
+				/controls/gear/emerg-extend eq 1
 			</test>
 		</switch>
 	</channel>

@@ -353,12 +353,10 @@
 		<name>Main_Gear_Doors.Left</name>
 		<type>rotate</type>
 		<object-name>GearLDoor</object-name>
-		<property>gear/gear[1]/position-norm</property>
+		<property>fdm/jsbsim/gear/unit[1]/door-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.0</ind><dep>0.0</dep></entry>
-			<entry><ind>0.2</ind><dep>84.0</dep></entry>
-			<entry><ind>0.8</ind><dep>84.0</dep></entry>
-			<entry><ind>1.0</ind><dep>0.0</dep></entry>
+			<entry><ind>1.0</ind><dep>84.0</dep></entry>
 		</interpolation>
 		<center>
 			<y-m>-0.4646725</y-m>
@@ -373,12 +371,10 @@
 		<name>Main_Gear_Doors.Right</name>
 		<type>rotate</type>
 		<object-name>GearRDoor</object-name>
-		<property>gear/gear[2]/position-norm</property>
+		<property>fdm/jsbsim/gear/unit[2]/door-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.0</ind><dep>0.0</dep></entry>
-			<entry><ind>0.2</ind><dep>84.0</dep></entry>
-			<entry><ind>0.8</ind><dep>84.0</dep></entry>
-			<entry><ind>1.0</ind><dep>0.0</dep></entry>
+			<entry><ind>1.0</ind><dep>84.0</dep></entry>
 		</interpolation>
 		<center>
 			<y-m>0.4646725</y-m>
@@ -394,12 +390,10 @@
 		<name>Nose_Gear_Doors.Left.01</name>
 		<type>rotate</type>
 		<object-name>GearNFwdDoorL</object-name>
-		<property>gear/gear[0]/position-norm</property>
+		<property>fdm/jsbsim/gear/unit[0]/door-pos-norm</property>
 		<interpolation>
-			<entry><ind>0.0z</ind><dep>0.0</dep></entry>
-			<entry><ind>0.2</ind><dep>90.0</dep></entry>
-			<entry><ind>0.8</ind><dep>90.0</dep></entry>
-			<entry><ind>1.0</ind><dep>0.0</dep></entry>
+			<entry><ind>0.0</ind><dep>0.0</dep></entry>
+			<entry><ind>1.0</ind><dep>90.0</dep></entry>
 		</interpolation>
 		<axis>
 			
@@ -440,12 +434,10 @@
 		<name>Nose_Gear_Doors.Right.01</name>
 		<type>rotate</type>
 		<object-name>GearNFwdDoorR</object-name>
-		<property>gear/gear[0]/position-norm</property>
+		<property>fdm/jsbsim/gear/unit[0]/door-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.0</ind><dep>0.0</dep></entry>
-			<entry><ind>0.2</ind><dep>90.0</dep></entry>
-			<entry><ind>0.8</ind><dep>90.0</dep></entry>
-			<entry><ind>1.0</ind><dep>0.0</dep></entry>
+			<entry><ind>1.0</ind><dep>90.0</dep></entry>
 		</interpolation>
 		<axis>
 			<x1-m>5.394</x1-m>

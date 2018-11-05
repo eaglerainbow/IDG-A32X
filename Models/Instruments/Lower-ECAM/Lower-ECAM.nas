@@ -2381,7 +2381,7 @@ var canvas_lowerECAM_wheel = {
 		leftdoor = getprop("/systems/hydraulic/gear/door-left");
 		rightdoor = getprop("/systems/hydraulic/gear/door-right");
 		nosedoor = getprop("/systems/hydraulic/gear/door-nose");
-		gearlvr = getprop("/controls/gear/gear-down");
+		gearlvr = getprop("/controls/gear/lever-pos");
 		askidsw = getprop("/systems/hydraulic/brakes/askidnwssw");
 		brakemode = getprop("/systems/hydraulic/brakes/mode");
 		accum = getprop("/systems/hydraulic/brakes/accumulator-pressure-psi");
@@ -2504,7 +2504,7 @@ var canvas_lowerECAM_wheel = {
 		}
 		
 		# Triangles
-		if (leftgear < 0.2 or leftgear > 0.8) {
+		if (leftgear < 0.0 or leftgear > 1.0) {
 			me["Triangle-Left1"].hide();
 			me["Triangle-Left2"].hide();
 		} else {
@@ -2520,7 +2520,7 @@ var canvas_lowerECAM_wheel = {
 			me["Triangle-Left2"].setColor(1,0,0);
 		}
 		
-		if (nosegear < 0.2 or nosegear > 0.8) {
+		if (nosegear < 0.0 or nosegear > 1.0) {
 			me["Triangle-Nose1"].hide();
 			me["Triangle-Nose2"].hide();
 		} else {
@@ -2536,7 +2536,7 @@ var canvas_lowerECAM_wheel = {
 			me["Triangle-Nose2"].setColor(1,0,0);
 		}
 		
-		if (rightgear < 0.2 or rightgear > 0.8) {
+		if (rightgear < 0.0 or rightgear > 1.0) {
 			me["Triangle-Right1"].hide();
 			me["Triangle-Right2"].hide();
 		} else {
