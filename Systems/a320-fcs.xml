@@ -42,6 +42,7 @@
 	<property value="0">gear/unit[0]/door-pos-norm</property>
 	<property value="0">gear/unit[1]/door-pos-norm</property>
 	<property value="0">gear/unit[2]/door-pos-norm</property>
+	<property value="0">gear/g-force-moment-adj</property>
 	<channel name="Libraries">
 		
 		<switch name="position/wow">
@@ -1900,7 +1901,7 @@
 				gear/unit[1]/door-pos-norm eq 1
 				gear/unit[2]/door-pos-norm eq 1
 			</test>
-			<test logic="AND" value="0.2">
+			<test logic="AND" value="gear/g-force-moment-adj">
 				/controls/gear/emerg-extend eq 1
 				gear/unit[0]/door-pos-norm eq 1
 				gear/unit[1]/door-pos-norm eq 1
@@ -1929,7 +1930,7 @@
 				gear/unit[1]/door-pos-norm eq 1
 				gear/unit[2]/door-pos-norm eq 1
 			</test>
-			<test logic="AND" value="0.2">
+			<test logic="AND" value="gear/g-force-moment-adj">
 				/controls/gear/emerg-extend eq 1
 				gear/unit[0]/door-pos-norm eq 1
 				gear/unit[1]/door-pos-norm eq 1
@@ -1958,7 +1959,7 @@
 				gear/unit[1]/door-pos-norm eq 1
 				gear/unit[2]/door-pos-norm eq 1
 			</test>
-			<test logic="AND" value="0.2">
+			<test logic="AND" value="gear/g-force-moment-adj">
 				/controls/gear/emerg-extend eq 1
 				gear/unit[0]/door-pos-norm eq 1
 				gear/unit[1]/door-pos-norm eq 1

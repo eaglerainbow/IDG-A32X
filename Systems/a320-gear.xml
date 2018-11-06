@@ -166,6 +166,79 @@
 			<output>/controls/gear/lever-pos</output>
 		</kinematic>
 		
+		<switch name="rubbish/gear-command-nose">
+			<output>gear/gear-cmd-nose</output>
+			<default value="0"/>
+			<test logic="AND" value="0">
+				fbw/pitch/g-instrumented lt 0
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="AND" value="gear/unit[0]/pos-norm">
+				fbw/pitch/g-instrumented eq 0
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="AND" value="1">
+				fbw/pitch/g-instrumented ge 0
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="OR" value="0">
+				/controls/gear/lever-pos eq 0
+			</test>
+			<test logic="OR" value="1">
+				/controls/gear/lever-pos eq 1
+				/controls/gear/emerg-extend eq 1
+			</test>
+		</switch>
+		
+		<switch name="rubbish/gear-command-left">
+			<output>gear/gear-cmd-left</output>
+			<default value="0"/>
+			<test logic="AND" value="0">
+				fbw/pitch/g-instrumented lt 0
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="AND" value="gear/unit[1]/pos-norm">
+				fbw/pitch/g-instrumented eq 0
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="AND" value="1">
+				fbw/pitch/g-instrumented ge 0
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="OR" value="0">
+				/controls/gear/lever-pos eq 0
+			</test>
+			<test logic="OR" value="1">
+				/controls/gear/lever-pos eq 1
+			</test>
+		</switch>
+		
+		<switch name="rubbish/gear-command-right">
+			<output>gear/gear-cmd-right</output>
+			<default value="0"/>
+			<test logic="AND" value="0">
+				fbw/pitch/g-instrumented lt 0
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="AND" value="gear/unit[2]/pos-norm">
+				fbw/pitch/g-instrumented eq 0
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="AND" value="1">
+				fbw/pitch/g-instrumented ge 0
+				/controls/gear/emerg-extend eq 1
+			</test>
+			<test logic="OR" value="0">
+				/controls/gear/lever-pos eq 0
+			</test>
+			<test logic="OR" value="1">
+				/controls/gear/lever-pos eq 1
+				/controls/gear/emerg-extend eq 1
+			</test>
+		</switch>
+	</channel>
+	
+	<channel name="Gear Doors">
 		<switch name="systems/lgciu/input/doors-cmd-nose">
 			<default value="0"/>
 			<test logic="AND" value="0">
@@ -273,42 +346,6 @@
 				gear/unit[2]/pos-norm eq 1
 			</test>
 		</switch>
-		
-		<switch name="rubbish/gear-command-nose">
-			<output>gear/gear-cmd-nose</output>
-			<default value="0"/>
-			<test logic="OR" value="0">
-				/controls/gear/lever-pos eq 0
-			</test>
-			<test logic="OR" value="1">
-				/controls/gear/lever-pos eq 1
-				/controls/gear/emerg-extend eq 1
-			</test>
-		</switch>
-		
-		<switch name="rubbish/gear-command-left">
-			<output>gear/gear-cmd-left</output>
-			<default value="0"/>
-			<test logic="OR" value="0">
-				/controls/gear/lever-pos eq 0
-			</test>
-			<test logic="OR" value="1">
-				/controls/gear/lever-pos eq 1
-				/controls/gear/emerg-extend eq 1
-			</test>
-		</switch>
-		
-		<switch name="rubbish/gear-command-right">
-			<output>gear/gear-cmd-right</output>
-			<default value="0"/>
-			<test logic="OR" value="0">
-				/controls/gear/lever-pos eq 0
-			</test>
-			<test logic="OR" value="1">
-				/controls/gear/lever-pos eq 1
-				/controls/gear/emerg-extend eq 1
-			</test>
-		</switch>
 	</channel>
 	
 	<channel name="Valves">
@@ -372,6 +409,27 @@
 				/systems/hydraulic/green-psi lt 1500
 				systems/lgciu/safety-valve-pos eq 0
 				systems/lgciu/cutoff-valve-pos eq 0
+			</test>
+		</switch>
+	</channel>
+	
+	<channel name="Emergency Extension">
+		<fcs_function name="gear/g-force-moment">
+			<function>
+				<quotient>
+					<pow>
+						<property>fbw/pitch/g-instrumented</property>
+						<value>3</value>
+					</pow>
+					<value>6</value>
+				</quotient>
+			</function>
+		</fcs_function>
+		
+		<switch name="gear/g-force-moment-adj">
+			<default value="gear/g-force-moment"/>
+			<test value="-gear/g-force-moment">
+				gear/g-force-moment lt 0
 			</test>
 		</switch>
 	</channel>
