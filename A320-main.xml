@@ -31,6 +31,7 @@
 				<position-norm type="double">0</position-norm>
 				<enabled type="int"/>
 				<available type="int">1</available>
+				<connected type="double">1</connected>
 				<chocks alias="/controls/gear/wheel-chocks"/>
 				<steer-cmd-norm alias="/controls/flight/rudder"/>
 				<yaw alias="/gear/gear[0]/steering-norm"/>

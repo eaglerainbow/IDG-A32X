@@ -2033,7 +2033,7 @@
 	
 	<channel name="Tiller">
 		
-		<switch name="hydraulics/tiller/switch">
+		<switch name="hydraulics/tiller/tiller-cmd">
 			<default value="/controls/flight/rudder"/>
 			<test logic="AND" value="/controls/flight/aileron">
 				fbw/fmgc/enabled eq 0
@@ -2048,7 +2048,7 @@
 			<function>
 				<table>
 					<independentVar lookup="row">/velocities/groundspeed-kt</independentVar>
-					<independentVar lookup="column">hydraulics/tiller/switch</independentVar>
+					<independentVar lookup="column">hydraulics/tiller/tiller-cmd</independentVar>
 					<tableData>
 						        -1     0  1
 						 40.000 -75.0  0  75.0
@@ -2066,9 +2066,20 @@
 			</test>
 		</switch>
 		
+		<switch name="systems/lgciu/towing-control-lever">
+			<default value="0"/>
+			<test value="1">
+				/sim/model/pushback/connected eq 1
+			</test>
+		</switch>
+		
 		<switch name="fcs/tiller-rate">
 			<default value="0"/>
-			<test value="70">
+			<test value="30">
+				systems/lgciu/towing-control-lever eq 1
+			</test>
+			<test logic="AND" value="70">
+				systems/lgciu/towing-control-lever eq 0
 				/systems/hydraulic/yellow-psi gt 1500
 			</test>
 		</switch>
