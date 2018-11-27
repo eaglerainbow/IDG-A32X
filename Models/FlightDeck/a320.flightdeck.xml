@@ -1738,7 +1738,7 @@
 				<command>nasal</command>
 				<script>
 				setprop("/instrumentation/altimeter[0]/setting-inhg", getprop("instrumentation/altimeter[0]/setting-inhg") + 0.01);
-				setprop("/instrumentation/altimeter[1]/setting-inhg", getprop("instrumentation/altimeter[1]/setting-inhg") + 0.01);
+				setprop("/instrumentation/altimeter[1]/setting-inhg", getprop("instrumentation/altimeter[0]/setting-inhg") + 0.01); # Not a typo, keeps them synced
 				</script>
 				<condition>
 					<and>
@@ -1761,7 +1761,7 @@
 				<command>nasal</command>
 				<script>
 				setprop("/instrumentation/altimeter[0]/setting-hpa", getprop("instrumentation/altimeter[0]/setting-hpa") + 1.0);
-				setprop("/instrumentation/altimeter[1]/setting-hpa", getprop("instrumentation/altimeter[1]/setting-hpa") + 1.0);
+				setprop("/instrumentation/altimeter[1]/setting-hpa", getprop("instrumentation/altimeter[0]/setting-hpa") + 1.0); # Not a typo, keeps them synced
 				</script>
 				<condition>
 					<and>
@@ -1796,7 +1796,7 @@
 				<command>nasal</command>
 				<script>
 				setprop("/instrumentation/altimeter[0]/setting-inhg", getprop("instrumentation/altimeter[0]/setting-inhg") - 0.01);
-				setprop("/instrumentation/altimeter[1]/setting-inhg", getprop("instrumentation/altimeter[1]/setting-inhg") - 0.01);
+				setprop("/instrumentation/altimeter[1]/setting-inhg", getprop("instrumentation/altimeter[0]/setting-inhg") - 0.01); # Not a typo, keeps them synced
 				</script>
 				<condition>
 					<and>
@@ -1819,7 +1819,7 @@
 				<command>nasal</command>
 				<script>
 				setprop("/instrumentation/altimeter[0]/setting-hpa", getprop("instrumentation/altimeter[0]/setting-hpa") - 1.0);
-				setprop("/instrumentation/altimeter[1]/setting-hpa", getprop("instrumentation/altimeter[1]/setting-hpa") - 1.0);
+				setprop("/instrumentation/altimeter[1]/setting-hpa", getprop("instrumentation/altimeter[0]/setting-hpa") - 1.0); # Not a typo, keeps them synced
 				</script>
 				<condition>
 					<and>
