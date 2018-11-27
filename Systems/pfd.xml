@@ -17,7 +17,7 @@
 			<property>/position/altitude-agl-ft</property>
 		</input>
 		<reference>
-			<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+			<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property>
 		</reference>
 		<output>/instrumentation/pfd/ground-level-diff</output>
 	</filter>
@@ -31,7 +31,7 @@
 			<property>/it-autoflight/internal/alt</property>
 		</input>
 		<reference>
-			<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+			<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property>
 		</reference>
 		<output>/instrumentation/pfd/sel-alt-diff</output>
 	</filter>
@@ -45,7 +45,7 @@
 			<property>/it-autoflight/internal/mng-alt</property>
 		</input>
 		<reference>
-			<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+			<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property>
 		</reference>
 		<output>/instrumentation/pfd/mng-alt-diff</output>
 	</filter>
@@ -140,7 +140,7 @@
 			<property>/it-autoflight/internal/alt</property>
 		</input>
 		<reference>
-			<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+			<property>/instrumentation/altimeter[0]/indicated-altitude-ft</property>
 		</reference>
 		<output>/instrumentation/pfd/alt-diff</output>
 	</filter>
@@ -178,7 +178,7 @@
 		<input>
 			<expression>
 				<difference>
-					<property>/instrumentation/airspeed-indicator/indicated-speed-kt</property>
+					<property>/instrumentation/airspeed-indicator[0]/indicated-speed-kt</property>
 					<value>30</value>
 				</difference>
 			</expression>
@@ -203,6 +203,76 @@
 		<type>exponential</type>
 		<input>/instrumentation/pfd/speed-lookahead-cmd</input>
 		<output>/instrumentation/pfd/speed-lookahead</output>
+		<filter-time>0.32</filter-time>
+	</filter>
+	
+	<filter>
+		<name>Speed Predictor Input</name>
+		<type>gain</type>
+		<gain>1.0</gain>
+		<input>
+			<expression>
+				<difference>
+					<property>/instrumentation/airspeed-indicator[1]/indicated-speed-kt</property>
+					<value>30</value>
+				</difference>
+			</expression>
+		</input>
+		<output>/instrumentation/pfd/speed-minus-30-2</output>
+		<min>0</min>
+		<max>390</max>
+	</filter>
+	
+	<predict-simple>
+		<name>Speed Predictor (Smoothed)</name>
+		<debug>false</debug>
+		<input>/instrumentation/pfd/speed-minus-30-2</input>
+		<output>/instrumentation/pfd/speed-lookahead-cmd-2</output>
+		<seconds>10.0</seconds>
+		<filter-gain>0.01</filter-gain>
+	</predict-simple>
+	
+	<filter>
+		<name>Speed Predictor Exponential</name>
+		<debug>false</debug>
+		<type>exponential</type>
+		<input>/instrumentation/pfd/speed-lookahead-cmd-2</input>
+		<output>/instrumentation/pfd/speed-lookahead-2</output>
+		<filter-time>0.32</filter-time>
+	</filter>
+	
+	<filter>
+		<name>Speed Predictor Input</name>
+		<type>gain</type>
+		<gain>1.0</gain>
+		<input>
+			<expression>
+				<difference>
+					<property>/instrumentation/airspeed-indicator[2]/indicated-speed-kt</property>
+					<value>30</value>
+				</difference>
+			</expression>
+		</input>
+		<output>/instrumentation/pfd/speed-minus-30-3</output>
+		<min>0</min>
+		<max>390</max>
+	</filter>
+	
+	<predict-simple>
+		<name>Speed Predictor (Smoothed)</name>
+		<debug>false</debug>
+		<input>/instrumentation/pfd/speed-minus-30-3</input>
+		<output>/instrumentation/pfd/speed-lookahead-cmd-3</output>
+		<seconds>10.0</seconds>
+		<filter-gain>0.01</filter-gain>
+	</predict-simple>
+	
+	<filter>
+		<name>Speed Predictor Exponential</name>
+		<debug>false</debug>
+		<type>exponential</type>
+		<input>/instrumentation/pfd/speed-lookahead-cmd-3</input>
+		<output>/instrumentation/pfd/speed-lookahead-3</output>
 		<filter-time>0.32</filter-time>
 	</filter>
 	

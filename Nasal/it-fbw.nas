@@ -199,14 +199,14 @@ var update_loop = func {
 		setprop("/it-fbw/degrade-law", 2);
 	}
 	
-	mmoIAS = (getprop("/instrumentation/airspeed-indicator/indicated-speed-kt") / getprop("/instrumentation/airspeed-indicator/indicated-mach")) * 0.82;
+	mmoIAS = (getprop("/instrumentation/airspeed-indicator[0]/indicated-speed-kt") / getprop("/instrumentation/airspeed-indicator[0]/indicated-mach")) * 0.82;
 	if (mmoIAS < 350) {
 		setprop("/it-fbw/speeds/vmo-mmo", mmoIAS);
 	} else {
 		setprop("/it-fbw/speeds/vmo-mmo", 350);
 	}
 	
-	if (getprop("/instrumentation/airspeed-indicator/indicated-speed-kt") > getprop("/it-fbw/speeds/vmo-mmo") + 6 and (law == 0 or law == 1)) {
+	if (getprop("/instrumentation/airspeed-indicator[0]/indicated-speed-kt") > getprop("/it-fbw/speeds/vmo-mmo") + 6 and (law == 0 or law == 1)) {
 		if (getprop("/it-fbw/protections/overspeed") != 1) {
 			setprop("/it-fbw/protections/overspeed", 1);
 		}

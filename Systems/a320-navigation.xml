@@ -1,0 +1,377 @@
+<!-- Airbus A320 ADIRS -->
+<!-- Jonathan Redpath (legoboyvdlp) -->
+
+<!--
+##############################################
+# Copyright (c) Joshua Davidson (it0uchpods) #
+##############################################
+-->
+
+<system name="A320: Navigation">
+	<channel name="System Toggles">
+		<switch name="systems/navigation/air-data/unit1/enabled">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				/controls/adirs/adr[0]/off ne 1
+				/controls/adirs/ir[0]/knob ne 0
+			</test>
+		</switch>
+		
+		<switch name="systems/navigation/air-data/unit2/enabled">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				/controls/adirs/adr[1]/off ne 1
+				/controls/adirs/ir[1]/knob ne 0
+			</test>
+		</switch>
+		
+		<switch name="systems/navigation/air-data/unit3/enabled">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				/controls/adirs/adr[2]/off ne 1
+				/controls/adirs/ir[2]/knob ne 0
+			</test>
+		</switch>
+	</channel>
+	
+	<channel name="Air Data">
+		<sensor name="systems/navigation/air-data/probes/capt-alpha-raw"> <!-- AOA sensor 2-->
+			<input>aero/alpha-deg</input>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/stby-alpha-raw"> <!-- AOA sensor 2-->
+			<input>aero/alpha-deg</input>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/fo-alpha-raw"> <!-- AOA sensor 3-->
+			<input>aero/alpha-deg</input>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/capt-outside-air-temp-raw"> <!-- TAT sensor 1. We can't measure TAT, so we take OAT and calculate TAT -->
+			<input>/environment/temperature-degc</input>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/fo-outside-air-temp-raw"> <!-- TAT sensor 2. We can't measure TAT, so we take OAT and calculate TAT -->
+			<input>/environment/temperature-degc</input>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/capt-pitot-pressure-raw">
+			<input>/systems/pitot[0]/measured-total-pressure-inhg</input>
+			<lag>9999</lag>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/fo-pitot-pressure-raw">
+			<input>/systems/pitot[1]/measured-total-pressure-inhg</input>
+			<lag>9999</lag>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/stby-pitot-pressure-raw">
+			<input>/systems/pitot[2]/measured-total-pressure-inhg</input>
+			<lag>9999</lag>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/capt-static-pressure-raw">
+			<input>/systems/static[0]/pressure-inhg</input>
+			<lag>9999</lag>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/fo-static-pressure-raw">
+			<input>/systems/static[1]/pressure-inhg</input>
+			<lag>9999</lag>
+		</sensor>
+		
+		<sensor name="systems/navigation/air-data/probes/stby-static-pressure-raw">
+			<input>/systems/static[2]/pressure-inhg</input>
+			<lag>9999</lag>
+		</sensor>
+	</channel>
+	
+	<!-- ADIRU 1
+		Source: CAPT probes -->
+	<channel name="ADIRU 1" execute="systems/navigation/air-data/unit1/enabled">
+		<fcs_function name="systems/navigation/air-data/unit1/true-airspeed-calculated"> <!-- https://en.wikipedia.org/wiki/True_airspeed#Calculating_true_airspeed -->
+			<function>
+				<product>
+					<value>661.47</value>
+					<property>velocities/mach</property> <!-- do not use calculated mach to avoid circular reference! -->
+					<sqrt>
+						<quotient>
+							<sum>
+								<property>systems/navigation/air-data/probes/capt-outside-air-temp-raw</property>
+								<value>273.15</value>
+							</sum>
+							<value>288.15</value>
+						</quotient>
+					</sqrt>
+				</product>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit1/total-air-temp-calculated"> <!-- https://en.wikipedia.org/wiki/Total_air_temperature -->
+			<function>
+				<sum>
+					<quotient>
+						<pow>
+							<property>systems/navigation/air-data/unit1/true-airspeed-calculated</property>
+							<value>2</value>
+						</pow>
+						<pow>
+							<value>87</value>
+							<value>2</value>
+						</pow>
+					</quotient>
+					<property>systems/navigation/air-data/probes/capt-outside-air-temp-raw</property>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit1/speed-of-sound-calculated"> <!-- https://en.wikipedia.org/wiki/Speed_of_sound#Practical_formula_for_dry_air -->
+			<function>
+				<product>
+					<sum>
+						<value>331.3</value>
+						<product>
+							<value>0.606</value>
+							<property>systems/navigation/air-data/probes/capt-outside-air-temp-raw</property>
+						</product>
+					</sum>
+				<value>1.94384449</value> <!-- m/s to knots -->
+				</product>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit1/alpha">
+			<function>
+				<property>systems/navigation/air-data/probes/capt-alpha-raw</property>
+			</function>
+		</fcs_function>
+
+		<fcs_function name="systems/navigation/air-data/unit1/mach"> <!-- https://en.wikipedia.org/wiki/Mach_number#Calculation -->
+			<function>
+				<quotient>
+					<property>systems/navigation/air-data/unit1/true-airspeed-calculated</property>
+					<property>systems/navigation/air-data/unit1/speed-of-sound-calculated</property>
+				</quotient>
+			</function>
+		</fcs_function>
+	</channel>
+	
+	<!-- ADIRU 2
+		Source: FO probes -->
+	<channel name="ADIRU 2" execute="systems/navigation/air-data/unit2/enabled">
+		<fcs_function name="systems/navigation/air-data/unit2/true-airspeed-calculated"> <!-- https://en.wikipedia.org/wiki/True_airspeed#Calculating_true_airspeed -->
+			<function>
+				<product>
+					<value>661.47</value>
+					<property>velocities/mach</property> <!-- do not use calculated mach to avoid circular reference! -->
+					<sqrt>
+						<quotient>
+							<sum>
+								<property>systems/navigation/air-data/probes/fo-outside-air-temp-raw</property>
+								<value>273.15</value>
+							</sum>
+							<value>288.15</value>
+						</quotient>
+					</sqrt>
+				</product>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit2/total-air-temp-calculated"> <!-- https://en.wikipedia.org/wiki/Total_air_temperature -->
+			<function>
+				<sum>
+					<quotient>
+						<pow>
+							<property>systems/navigation/air-data/unit2/true-airspeed-calculated</property>
+							<value>2</value>
+						</pow>
+						<pow>
+							<value>87</value>
+							<value>2</value>
+						</pow>
+					</quotient>
+					<property>systems/navigation/air-data/probes/fo-outside-air-temp-raw</property>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit2/speed-of-sound-calculated"> <!-- https://en.wikipedia.org/wiki/Speed_of_sound#Practical_formula_for_dry_air -->
+			<function>
+				<product>
+					<sum>
+						<value>331.3</value>
+						<product>
+							<value>0.606</value>
+							<property>systems/navigation/air-data/probes/fo-outside-air-temp-raw</property>
+						</product>
+					</sum>
+				<value>1.94384449</value> <!-- m/s to knots -->
+				</product>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit2/alpha">
+			<function>
+				<property>systems/navigation/air-data/probes/fo-alpha-raw</property>
+			</function>
+		</fcs_function>
+
+		<fcs_function name="systems/navigation/air-data/unit2/mach"> <!-- https://en.wikipedia.org/wiki/Mach_number#Calculation -->
+			<function>
+				<quotient>
+					<property>systems/navigation/air-data/unit2/true-airspeed-calculated</property>
+					<property>systems/navigation/air-data/unit2/speed-of-sound-calculated</property>
+				</quotient>
+			</function>
+		</fcs_function>
+	</channel>
+	
+	<!-- ADIRU 3
+		Source: STBY / CAPT probes -->
+	<channel name="ADIRU 3" execute="systems/navigation/air-data/unit3/enabled">
+		<fcs_function name="systems/navigation/air-data/unit3/true-airspeed-calculated"> <!-- https://en.wikipedia.org/wiki/True_airspeed#Calculating_true_airspeed -->
+			<function>
+				<product>
+					<value>661.47</value>
+					<property>velocities/mach</property> <!-- do not use calculated mach to avoid circular reference! -->
+					<sqrt>
+						<quotient>
+							<sum>
+								<property>systems/navigation/air-data/probes/capt-outside-air-temp-raw</property>
+								<value>273.15</value>
+							</sum>
+							<value>288.15</value>
+						</quotient>
+					</sqrt>
+				</product>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit3/total-air-temp-calculated"> <!-- https://en.wikipedia.org/wiki/Total_air_temperature -->
+			<function>
+				<sum>
+					<quotient>
+						<pow>
+							<property>systems/navigation/air-data/unit3/true-airspeed-calculated</property>
+							<value>2</value>
+						</pow>
+						<pow>
+							<value>87</value>
+							<value>2</value>
+						</pow>
+					</quotient>
+					<property>systems/navigation/air-data/probes/capt-outside-air-temp-raw</property>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit3/speed-of-sound-calculated"> <!-- https://en.wikipedia.org/wiki/Speed_of_sound#Practical_formula_for_dry_air -->
+			<function>
+				<product>
+					<sum>
+						<value>331.3</value>
+						<product>
+							<value>0.606</value>
+							<property>systems/navigation/air-data/probes/capt-outside-air-temp-raw</property>
+						</product>
+					</sum>
+				<value>1.94384449</value> <!-- m/s to knots -->
+				</product>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit3/alpha">
+			<function>
+				<property>systems/navigation/air-data/probes/stby-alpha-raw</property>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="systems/navigation/air-data/unit3/mach"> <!-- https://en.wikipedia.org/wiki/Mach_number#Calculation -->
+			<function>
+				<quotient>
+					<property>systems/navigation/air-data/unit3/true-airspeed-calculated</property>
+					<property>systems/navigation/air-data/unit3/speed-of-sound-calculated</property>
+				</quotient>
+			</function>
+		</fcs_function>
+		
+	</channel>
+	
+	
+	<channel name="Accelerometers"> <!-- consider use of gyro element: https://sourceforge.net/p/jsbsim/mailman/message/28643598/  and http://jsbsim.sourceforge.net/JSBSim/classJSBSim_1_1FGGyro.html#details -->
+		<accelerometer name="systems/navigation/acc-x">
+  			<location unit="M">
+    				<x> 2.7 </x>
+    				<y> 0.0 </y>
+					<z> -2.7 </z>
+  			</location>
+  			<orientation unit="DEG">
+    				<pitch> 0.0 </pitch>
+    				<roll>  0.0 </roll>
+    				<yaw> 	0.0 </yaw>
+  			</orientation>
+  			<axis> X</axis>
+  			<lag> 0.0 </lag>
+  			<noise variation="PERCENT" distribution="GAUSSIAN"> 0.01 </noise>
+			<output>systems/navigation/acceleration-x</output>
+		</accelerometer>
+
+		<accelerometer name="systems/navigation/acc-y">
+  			<location unit="M">
+    				<x> 2.7 </x>
+    				<y> 0.0 </y>
+					<z> -2.7 </z>
+  			</location>
+  			<orientation unit="DEG">
+    				<pitch> 0.0 </pitch>
+    				<roll>  0.0 </roll>
+    				<yaw> 	0.0 </yaw>
+  			</orientation>
+  			<axis> Y</axis>
+  			<lag> 0.0 </lag>
+  			<noise variation="PERCENT" distribution="GAUSSIAN"> 0.01 </noise>
+			<output>systems/navigation/acceleration-y</output>
+		</accelerometer>
+
+		<accelerometer name="systems/navigation/acc-z">
+  			<location unit="M">
+    				<x> 2.7 </x>
+    				<y> 0.0 </y>
+					<z> -2.7 </z>
+  			</location>
+  			<orientation unit="DEG">
+    				<pitch> 0.0 </pitch>
+    				<roll>  0.0 </roll>
+    				<yaw> 	0.0 </yaw>
+  			</orientation>
+  			<axis> Z</axis>
+  			<lag> 0.0 </lag>
+  			<noise variation="PERCENT" distribution="GAUSSIAN"> 0.01 </noise>
+			<output>systems/navigation/acceleration-z</output>
+		</accelerometer>
+
+		<pid name="systems/navigation/int-acc-x">
+			<input>systems/navigation/acceleration-x</input>
+			<kp> 0.0 </kp>
+			<ki> 1.0 </ki>
+			<kd> 0.0</kd>
+			<output>systems/navigation/dvx</output>
+  		</pid>
+
+		<pid name="systems/navigation/int-acc-y">
+			<input>systems/navigation/acceleration-y</input>
+			<kp> 0.0 </kp>
+			<ki> 1.0 </ki>
+			<kd> 0.0</kd>
+			<output>systems/navigation/dvy</output>
+  		</pid>
+
+		<pid name="systems/navigation/int-acc-z">
+			<input>systems/navigation/acceleration-z</input>
+			<kp> 0.0 </kp>
+			<ki> 1.0 </ki>
+			<kd> 0.0</kd>
+			<output>systems/navigation/dvz</output>
+  		</pid>
+	</channel>
+</system>

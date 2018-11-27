@@ -117,7 +117,7 @@ var ECAM = {
 		thrustL = getprop("/systems/thrust/state1");
 		thrustR = getprop("/systems/thrust/state2");
 		elec = getprop("/systems/electrical/on");
-		speed = getprop("/instrumentation/airspeed-indicator/indicated-speed-kt");
+		speed = getprop("/instrumentation/airspeed-indicator[0]/indicated-speed-kt");
 		wow = getprop("/gear/gear[0]/wow");
 		eng = getprop("/options/eng");
 		

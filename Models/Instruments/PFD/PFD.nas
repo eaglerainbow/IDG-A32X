@@ -71,10 +71,14 @@ var fd_mode = props.globals.getNode("/modes/pfd/fma/fd-mode", 1);
 var at_mode = props.globals.getNode("/modes/pfd/fma/at-mode", 1);
 var alt_std_mode = props.globals.getNode("/modes/altimeter/std", 1);
 var alt_inhg_mode = props.globals.getNode("/modes/altimeter/inhg", 1);
-var alt_hpa = props.globals.getNode("/instrumentation/altimeter/setting-hpa", 1);
-var alt_inhg = props.globals.getNode("/instrumentation/altimeter/setting-inhg", 1);
-var altitude = props.globals.getNode("/instrumentation/altimeter/indicated-altitude-ft", 1);
-var altitude_pfd = props.globals.getNode("/instrumentation/altimeter/indicated-altitude-ft-pfd", 1);
+var alt_hpa = props.globals.getNode("/instrumentation/altimeter[0]/setting-hpa", 1);
+var alt_inhg = props.globals.getNode("/instrumentation/altimeter[0]/setting-inhg", 1);
+var altitude = props.globals.getNode("/instrumentation/altimeter[0]/indicated-altitude-ft", 1);
+var altitude_pfd = props.globals.getNode("/instrumentation/altimeter[0]/indicated-altitude-ft-pfd", 1);
+var altitude_1 = props.globals.getNode("/instrumentation/altimeter[1]/indicated-altitude-ft", 1);
+var altitude_2 = props.globals.getNode("/instrumentation/altimeter[2]/indicated-altitude-ft", 1);
+var altitude_pfd_1 = props.globals.getNode("/instrumentation/altimeter[1]/indicated-altitude-ft-pfd", 1);
+var altitude_pfd_2 = props.globals.getNode("/instrumentation/altimeter[2]/indicated-altitude-ft-iesi", 1);
 var alt_diff = props.globals.getNode("/instrumentation/pfd/alt-diff", 1);
 var ap_alt = props.globals.getNode("/it-autoflight/internal/alt", 1);
 var vs_needle = props.globals.getNode("/instrumentation/pfd/vs-needle", 1);
@@ -82,8 +86,12 @@ var vs_digit = props.globals.getNode("/instrumentation/pfd/vs-digit-trans", 1);
 var ap_vs_pfd = props.globals.getNode("/it-autoflight/internal/vert-speed-fpm-pfd", 1);
 var athr_arm = props.globals.getNode("/modes/pfd/fma/athr-armed", 1);
 var FMGC_max_spd = props.globals.getNode("/FMGC/internal/maxspeed", 1);
-var ind_spd_kt = props.globals.getNode("/instrumentation/airspeed-indicator/indicated-speed-kt", 1);
-var ind_spd_mach = props.globals.getNode("/instrumentation/airspeed-indicator/indicated-mach", 1);
+var ind_spd_kt = props.globals.getNode("/instrumentation/airspeed-indicator[0]/indicated-speed-kt", 1);
+var ind_spd_mach = props.globals.getNode("/instrumentation/airspeed-indicator[0]/indicated-mach", 1);
+var ind_spd_kt_1 = props.globals.getNode("/instrumentation/airspeed-indicator[1]/indicated-speed-kt", 1);
+var ind_spd_mach_1 = props.globals.getNode("/instrumentation/airspeed-indicator[1]/indicated-mach", 1);
+var ind_spd_kt_2 = props.globals.getNode("/instrumentation/airspeed-indicator[2]/indicated-speed-kt", 1);
+var ind_spd_mach_2 = props.globals.getNode("/instrumentation/airspeed-indicator[2]/indicated-mach", 1);
 var at_mach_mode = props.globals.getNode("/it-autoflight/input/kts-mach", 1);
 var at_input_spd_mach = props.globals.getNode("/it-autoflight/input/spd-mach", 1);
 var at_input_spd_kts = props.globals.getNode("/it-autoflight/input/spd-kts", 1);
@@ -136,6 +144,8 @@ var hdg_scale = props.globals.initNode("/instrumentation/pfd/heading-scale", 0.0
 var track = props.globals.initNode("/instrumentation/pfd/track-deg", 0.0, "DOUBLE");
 var track_diff = props.globals.initNode("/instrumentation/pfd/track-hdg-diff", 0.0, "DOUBLE");
 var speed_pred = props.globals.initNode("/instrumentation/pfd/speed-lookahead", 0.0, "DOUBLE");
+var speed_pred_2 = props.globals.initNode("/instrumentation/pfd/speed-lookahead-2", 0.0, "DOUBLE");
+var speed_pred_3 = props.globals.initNode("/instrumentation/pfd/speed-lookahead-3", 0.0, "DOUBLE");
 var du1_test = props.globals.initNode("/instrumentation/du/du1-test", 0, "BOOL");
 var du1_test_time = props.globals.initNode("/instrumentation/du/du1-test-time", 0.0, "DOUBLE");
 var du1_test_amount = props.globals.initNode("/instrumentation/du/du1-test-amount", 0.0, "DOUBLE");
@@ -612,119 +622,6 @@ var canvas_PFD_base = {
 		}
 	},
 	updateCommonFast: func() {
-		# Airspeed
-		ind_spd = ind_spd_kt.getValue();
-		# Subtract 30, since the scale starts at 30, but don"t allow less than 0, or more than 420 situations
-		if (ind_spd <= 30) {
-			ASI = 0;
-		} else if (ind_spd >= 420) {
-			ASI = 390;
-		} else {
-			ASI = ind_spd - 30;
-		}
-		
-		FMGC_max = FMGC_max_spd.getValue();
-		if (FMGC_max <= 30) {
-			ASImax = 0 - ASI;
-		} else if (FMGC_max >= 420) {
-			ASImax = 390 - ASI;
-		} else {
-			ASImax = FMGC_max - 30 - ASI;
-		}
-		
-		me["ASI_scale"].setTranslation(0, ASI * 6.6);
-		me["ASI_max"].setTranslation(0, ASImax * -6.6);
-		
-		ind_mach = ind_spd_mach.getValue();
-		if (ind_mach >= 0.5) {
-			me["ASI_mach_decimal"].show();
-			me["ASI_mach"].show();
-		} else {
-			me["ASI_mach_decimal"].hide();
-			me["ASI_mach"].hide();
-		}
-		
-		if (ind_mach >= 0.999) {
-			me["ASI_mach"].setText("999");
-		} else {
-			me["ASI_mach"].setText(sprintf("%3.0f", ind_mach * 1000));
-		}
-		
-		if (managed_spd.getValue() == 1) {
-			me["ASI_target"].setColor(0.6901,0.3333,0.7450);
-			me["ASI_digit_UP"].setColor(0.6901,0.3333,0.7450);
-			me["ASI_decimal_UP"].setColor(0.6901,0.3333,0.7450);
-			me["ASI_digit_DN"].setColor(0.6901,0.3333,0.7450);
-			me["ASI_decimal_DN"].setColor(0.6901,0.3333,0.7450);
-		} else {
-			me["ASI_target"].setColor(0.0901,0.6039,0.7176);
-			me["ASI_digit_UP"].setColor(0.0901,0.6039,0.7176);
-			me["ASI_decimal_UP"].setColor(0.0901,0.6039,0.7176);
-			me["ASI_digit_DN"].setColor(0.0901,0.6039,0.7176);
-			me["ASI_decimal_DN"].setColor(0.0901,0.6039,0.7176);
-		}
-		
-		tgt_ias = at_tgt_ias.getValue();
-		if (tgt_ias <= 30) {
-			ASItrgt = 0 - ASI;
-		} else if (tgt_ias >= 420) {
-			ASItrgt = 390 - ASI;
-		} else {
-			ASItrgt = tgt_ias - 30 - ASI;
-		}
-		
-		ASItrgtdiff = tgt_ias - ind_spd;
-		
-		if (ASItrgtdiff >= -42 and ASItrgtdiff <= 42) {
-			me["ASI_target"].setTranslation(0, ASItrgt * -6.6);
-			me["ASI_digit_UP"].hide();
-			me["ASI_decimal_UP"].hide();
-			me["ASI_digit_DN"].hide();
-			me["ASI_decimal_DN"].hide();
-			me["ASI_target"].show();
-		} else if (ASItrgtdiff < -42) {
-			if (at_mach_mode.getValue() == 1) {
-				me["ASI_digit_DN"].setText(sprintf("%3.0f", at_input_spd_mach.getValue() * 1000));
-				me["ASI_decimal_UP"].hide();
-				me["ASI_decimal_DN"].show();
-			} else {
-				me["ASI_digit_DN"].setText(sprintf("%3.0f", at_input_spd_kts.getValue()));
-				me["ASI_decimal_UP"].hide();
-				me["ASI_decimal_DN"].hide();
-			}
-			me["ASI_digit_DN"].show();
-			me["ASI_digit_UP"].hide();
-			me["ASI_target"].hide();
-		} else if (ASItrgtdiff > 42) {
-			if (at_mach_mode.getValue() == 1) {
-				me["ASI_digit_UP"].setText(sprintf("%3.0f", at_input_spd_mach.getValue() * 1000));
-				me["ASI_decimal_UP"].show();
-				me["ASI_decimal_DN"].hide();
-			} else {
-				me["ASI_digit_UP"].setText(sprintf("%3.0f", at_input_spd_kts.getValue()));
-				me["ASI_decimal_UP"].hide();
-				me["ASI_decimal_DN"].hide();
-			}
-			me["ASI_digit_UP"].show();
-			me["ASI_digit_DN"].hide();
-			me["ASI_target"].hide();
-		}
-		
-		ASItrend = speed_pred.getValue() - ASI;
-		me["ASI_trend_up"].setTranslation(0, math.clamp(ASItrend, 0, 50) * -6.6);
-		me["ASI_trend_down"].setTranslation(0, math.clamp(ASItrend, -50, 0) * -6.6);
-		
-		if (ASItrend >= 2) {
-			me["ASI_trend_up"].show();
-			me["ASI_trend_down"].hide();
-		} else if (ASItrend <= -2) {
-			me["ASI_trend_down"].show();
-			me["ASI_trend_up"].hide();
-		} else {
-			me["ASI_trend_up"].hide();
-			me["ASI_trend_down"].hide();
-		}
-		
 		# Attitude Indicator
 		pitch_cur = pitch.getValue();
 		roll_cur =  roll.getValue();
@@ -791,64 +688,6 @@ var canvas_PFD_base = {
 		}
 		
 		me["AI_stick_pos"].setTranslation(aileron_input.getValue() * 196.8, elevator_input.getValue() * 151.5);
-		
-		# Altitude
-		me.altitude = altitude.getValue();
-		me.altOffset = me.altitude / 500 - int(me.altitude / 500);
-		me.middleAltText = roundaboutAlt(me.altitude / 100);
-		me.middleAltOffset = nil;
-		if (me.altOffset > 0.5) {
-			me.middleAltOffset = -(me.altOffset - 1) * 243.3424;
-		} else {
-			me.middleAltOffset = -me.altOffset * 243.3424;
-		}
-		me["ALT_scale"].setTranslation(0, -me.middleAltOffset);
-		me["ALT_scale"].update();
-		me["ALT_five"].setText(sprintf("%03d", abs(me.middleAltText+10)));
-		me["ALT_four"].setText(sprintf("%03d", abs(me.middleAltText+5)));
-		me["ALT_three"].setText(sprintf("%03d", abs(me.middleAltText)));
-		me["ALT_two"].setText(sprintf("%03d", abs(me.middleAltText-5)));
-		me["ALT_one"].setText(sprintf("%03d", abs(me.middleAltText-10)));
-		
-		me["ALT_digits"].setText(sprintf("%s", altitude_pfd.getValue()));
-		altTens = num(right(sprintf("%02d", altitude.getValue()), 2));
-		me["ALT_tens"].setTranslation(0, altTens * 1.392);
-		
-		ap_alt_cur = ap_alt.getValue();
-		alt_diff_cur = alt_diff.getValue();
-		if (alt_diff_cur >= -565 and alt_diff_cur <= 565) {
-			me["ALT_target"].setTranslation(0, (alt_diff_cur / 100) * -48.66856);
-			me["ALT_target_digit"].setText(sprintf("%03d", math.round(ap_alt_cur / 100)));
-			me["ALT_digit_UP"].hide();
-			me["ALT_digit_DN"].hide();
-			me["ALT_target"].show();
-		} else if (alt_diff_cur < -565) {
-			if (alt_std_mode.getValue() == 1) {
-				if (ap_alt_cur < 10000) {
-					me["ALT_digit_DN"].setText(sprintf("%s", "FL   " ~ ap_alt_cur / 100));
-				} else {
-					me["ALT_digit_DN"].setText(sprintf("%s", "FL " ~ ap_alt_cur / 100));
-				}
-			} else {
-				me["ALT_digit_DN"].setText(sprintf("%5.0f", ap_alt_cur));
-			}
-			me["ALT_digit_DN"].show();
-			me["ALT_digit_UP"].hide();
-			me["ALT_target"].hide();
-		} else if (alt_diff_cur > 565) {
-			if (alt_std_mode.getValue() == 1) {
-				if (ap_alt_cur < 10000) {
-					me["ALT_digit_UP"].setText(sprintf("%s", "FL   " ~ ap_alt_cur / 100));
-				} else {
-					me["ALT_digit_UP"].setText(sprintf("%s", "FL " ~ ap_alt_cur / 100));
-				}
-			} else {
-				me["ALT_digit_UP"].setText(sprintf("%5.0f", ap_alt_cur));
-			}
-			me["ALT_digit_UP"].show();
-			me["ALT_digit_DN"].hide();
-			me["ALT_target"].hide();
-		}
 		
 		# Vertical Speed
 		me["VS_pointer"].setRotation(vs_needle.getValue() * D2R);
@@ -1035,6 +874,195 @@ var canvas_PFD_1 = {
 		me.updateCommon();
 	},
 	updateFast: func() {
+		# Airspeed
+		if (air_switch.getValue() == -1) {
+			ind_spd_1 = ind_spd_kt_2.getValue();
+			ind_mach_1 = ind_spd_mach_2.getValue();
+		} else {
+			ind_spd_1 = ind_spd_kt.getValue();
+			ind_mach_1 = ind_spd_mach.getValue();
+		}
+		
+		# Subtract 30, since the scale starts at 30, but don't allow less than 0, or more than 420 situations
+		if (ind_spd_1 <= 30) {
+			ASI_1 = 0;
+		} else if (ind_spd_1 >= 420) {
+			ASI_1 = 390;
+		} else {
+			ASI_1 = ind_spd_1 - 30;
+		}
+		
+		if (air_switch.getValue() == -1) {
+			ASItrend_1 = speed_pred_3.getValue() - ASI_1;
+		} else {
+			ASItrend_1 = speed_pred.getValue() - ASI_1;
+		}
+		
+		FMGC_max_1 = FMGC_max_spd.getValue();
+		if (FMGC_max_1 <= 30) {
+			ASImax_1 = 0 - ASI_1;
+		} else if (FMGC_max_1 >= 420) {
+			ASImax_1 = 390 - ASI_1;
+		} else {
+			ASImax_1 = FMGC_max_1 - 30 - ASI_1;
+		}
+		
+		me["ASI_scale"].setTranslation(0, ASI_1 * 6.6);
+		me["ASI_max"].setTranslation(0, ASImax_1 * -6.6);
+		
+		ind_mach_1 = ind_spd_mach.getValue();
+		if (ind_mach_1 >= 0.5) {
+			me["ASI_mach_decimal"].show();
+			me["ASI_mach"].show();
+		} else {
+			me["ASI_mach_decimal"].hide();
+			me["ASI_mach"].hide();
+		}
+		
+		if (ind_mach_1 >= 0.999) {
+			me["ASI_mach"].setText("999");
+		} else {
+			me["ASI_mach"].setText(sprintf("%3.0f", ind_mach_1 * 1000));
+		}
+		
+		if (managed_spd.getValue() == 1) {
+			me["ASI_target"].setColor(0.6901,0.3333,0.7450);
+			me["ASI_digit_UP"].setColor(0.6901,0.3333,0.7450);
+			me["ASI_decimal_UP"].setColor(0.6901,0.3333,0.7450);
+			me["ASI_digit_DN"].setColor(0.6901,0.3333,0.7450);
+			me["ASI_decimal_DN"].setColor(0.6901,0.3333,0.7450);
+		} else {
+			me["ASI_target"].setColor(0.0901,0.6039,0.7176);
+			me["ASI_digit_UP"].setColor(0.0901,0.6039,0.7176);
+			me["ASI_decimal_UP"].setColor(0.0901,0.6039,0.7176);
+			me["ASI_digit_DN"].setColor(0.0901,0.6039,0.7176);
+			me["ASI_decimal_DN"].setColor(0.0901,0.6039,0.7176);
+		}
+		
+		tgt_ias = at_tgt_ias.getValue();
+		if (tgt_ias <= 30) {
+			ASItrgt_1 = 0 - ASI_1;
+		} else if (tgt_ias >= 420) {
+			ASItrgt_1 = 390 - ASI_1;
+		} else {
+			ASItrgt_1 = tgt_ias - 30 - ASI_1;
+		}
+		
+		ASItrgtdiff_1 = tgt_ias - ind_spd_1;
+		
+		if (ASItrgtdiff_1 >= -42 and ASItrgtdiff_1 <= 42) {
+			me["ASI_target"].setTranslation(0, ASItrgt_1 * -6.6);
+			me["ASI_digit_UP"].hide();
+			me["ASI_decimal_UP"].hide();
+			me["ASI_digit_DN"].hide();
+			me["ASI_decimal_DN"].hide();
+			me["ASI_target"].show();
+		} else if (ASItrgtdiff_1 < -42) {
+			if (at_mach_mode.getValue() == 1) {
+				me["ASI_digit_DN"].setText(sprintf("%3.0f", at_input_spd_mach.getValue() * 1000));
+				me["ASI_decimal_UP"].hide();
+				me["ASI_decimal_DN"].show();
+			} else {
+				me["ASI_digit_DN"].setText(sprintf("%3.0f", at_input_spd_kts.getValue()));
+				me["ASI_decimal_UP"].hide();
+				me["ASI_decimal_DN"].hide();
+			}
+			me["ASI_digit_DN"].show();
+			me["ASI_digit_UP"].hide();
+			me["ASI_target"].hide();
+		} else if (ASItrgtdiff_1 > 42) {
+			if (at_mach_mode.getValue() == 1) {
+				me["ASI_digit_UP"].setText(sprintf("%3.0f", at_input_spd_mach.getValue() * 1000));
+				me["ASI_decimal_UP"].show();
+				me["ASI_decimal_DN"].hide();
+			} else {
+				me["ASI_digit_UP"].setText(sprintf("%3.0f", at_input_spd_kts.getValue()));
+				me["ASI_decimal_UP"].hide();
+				me["ASI_decimal_DN"].hide();
+			}
+			me["ASI_digit_UP"].show();
+			me["ASI_digit_DN"].hide();
+			me["ASI_target"].hide();
+		}
+		
+		me["ASI_trend_up"].setTranslation(0, math.clamp(ASItrend_1, 0, 50) * -6.6);
+		me["ASI_trend_down"].setTranslation(0, math.clamp(ASItrend_1, -50, 0) * -6.6);
+		
+		if (ASItrend_1 >= 2) {
+			me["ASI_trend_up"].show();
+			me["ASI_trend_down"].hide();
+		} else if (ASItrend_1 <= -2) {
+			me["ASI_trend_down"].show();
+			me["ASI_trend_up"].hide();
+		} else {
+			me["ASI_trend_up"].hide();
+			me["ASI_trend_down"].hide();
+		}
+		
+		# Altitude
+		if (air_switch.getValue() == -1) {
+			me.altitude_1 = altitude_2.getValue();
+			me.altitudep_1 = altitude_pfd_2.getValue();
+		} else {
+			me.altitude_1 = altitude.getValue();
+			me.altitudep_1 = altitude_pfd.getValue();
+		}
+		
+		me.altOffset_1 = me.altitude_1 / 500 - int(me.altitude_1 / 500);
+		me.middleAltText_1 = roundaboutAlt(me.altitude_1 / 100);
+		me.middleAltOffset_1 = nil;
+		if (me.altOffset_1 > 0.5) {
+			me.middleAltOffset_1 = -(me.altOffset_1 - 1) * 243.3424;
+		} else {
+			me.middleAltOffset_1 = -me.altOffset_1 * 243.3424;
+		}
+		me["ALT_scale"].setTranslation(0, -me.middleAltOffset_1);
+		me["ALT_scale"].update();
+		me["ALT_five"].setText(sprintf("%03d", abs(me.middleAltText_1+10)));
+		me["ALT_four"].setText(sprintf("%03d", abs(me.middleAltText_1+5)));
+		me["ALT_three"].setText(sprintf("%03d", abs(me.middleAltText_1)));
+		me["ALT_two"].setText(sprintf("%03d", abs(me.middleAltText_1-5)));
+		me["ALT_one"].setText(sprintf("%03d", abs(me.middleAltText_1-10)));
+		
+		me["ALT_digits"].setText(sprintf("%s", me.altitudep_1));
+		altTens_1 = num(right(sprintf("%02d", me.altitude_1), 2));
+		me["ALT_tens"].setTranslation(0, altTens_1 * 1.392);
+		
+		ap_alt_cur_1 = ap_alt.getValue();
+		alt_diff_cur_1 = alt_diff.getValue();
+		if (alt_diff_cur_1 >= -565 and alt_diff_cur_1 <= 565) {
+			me["ALT_target"].setTranslation(0, (alt_diff_cur_1 / 100) * -48.66856);
+			me["ALT_target_digit"].setText(sprintf("%03d", math.round(ap_alt_cur_1 / 100)));
+			me["ALT_digit_UP"].hide();
+			me["ALT_digit_DN"].hide();
+			me["ALT_target"].show();
+		} else if (alt_diff_cur_1 < -565) {
+			if (alt_std_mode.getValue() == 1) {
+				if (ap_alt_cur_1 < 10000) {
+					me["ALT_digit_DN"].setText(sprintf("%s", "FL   " ~ ap_alt_cur_1 / 100));
+				} else {
+					me["ALT_digit_DN"].setText(sprintf("%s", "FL " ~ ap_alt_cur_1 / 100));
+				}
+			} else {
+				me["ALT_digit_DN"].setText(sprintf("%5.0f", ap_alt_cur_1));
+			}
+			me["ALT_digit_DN"].show();
+			me["ALT_digit_UP"].hide();
+			me["ALT_target"].hide();
+		} else if (alt_diff_cur_1 > 565) {
+			if (alt_std_mode.getValue() == 1) {
+				if (ap_alt_cur_1 < 10000) {
+					me["ALT_digit_UP"].setText(sprintf("%s", "FL   " ~ ap_alt_cur_1 / 100));
+				} else {
+					me["ALT_digit_UP"].setText(sprintf("%s", "FL " ~ ap_alt_cur_1 / 100));
+				}
+			} else {
+				me["ALT_digit_UP"].setText(sprintf("%5.0f", ap_alt_cur_1));
+			}
+			me["ALT_digit_UP"].show();
+			me["ALT_digit_DN"].hide();
+			me["ALT_target"].hide();
+		}
 		me.updateCommonFast();
 	},
 };
@@ -1130,6 +1158,194 @@ var canvas_PFD_2 = {
 		me.updateCommon();
 	},
 	updateFast: func() {
+		# Airspeed
+		if (air_switch.getValue() == 1) {
+			ind_spd_2 = ind_spd_kt_2.getValue();
+			ind_mach_2 = ind_spd_mach_2.getValue();
+		} else {
+			ind_spd_2 = ind_spd_kt_1.getValue();
+			ind_mach_2 = ind_spd_mach_1.getValue();
+		}
+			
+		# Subtract 30, since the scale starts at 30, but don't allow less than 0, or more than 420 situations
+		if (ind_spd_2 <= 30) {
+			ASI = 0;
+		} else if (ind_spd_2 >= 420) {
+			ASI = 390;
+		} else {
+			ASI = ind_spd_2 - 30;
+		}
+		
+		if (air_switch.getValue() == 1) {
+			ASItrend = speed_pred_3.getValue() - ASI;
+		} else {
+			ASItrend = speed_pred_2.getValue() - ASI;
+		}
+		
+		FMGC_max = FMGC_max_spd.getValue();
+		if (FMGC_max <= 30) {
+			ASImax = 0 - ASI;
+		} else if (FMGC_max >= 420) {
+			ASImax = 390 - ASI;
+		} else {
+			ASImax = FMGC_max - 30 - ASI;
+		}
+		
+		me["ASI_scale"].setTranslation(0, ASI * 6.6);
+		me["ASI_max"].setTranslation(0, ASImax * -6.6);
+		
+		if (ind_mach_2 >= 0.5) {
+			me["ASI_mach_decimal"].show();
+			me["ASI_mach"].show();
+		} else {
+			me["ASI_mach_decimal"].hide();
+			me["ASI_mach"].hide();
+		}
+		
+		if (ind_mach_2 >= 0.999) {
+			me["ASI_mach"].setText("999");
+		} else {
+			me["ASI_mach"].setText(sprintf("%3.0f", ind_mach_2 * 1000));
+		}
+		
+		if (managed_spd.getValue() == 1) {
+			me["ASI_target"].setColor(0.6901,0.3333,0.7450);
+			me["ASI_digit_UP"].setColor(0.6901,0.3333,0.7450);
+			me["ASI_decimal_UP"].setColor(0.6901,0.3333,0.7450);
+			me["ASI_digit_DN"].setColor(0.6901,0.3333,0.7450);
+			me["ASI_decimal_DN"].setColor(0.6901,0.3333,0.7450);
+		} else {
+			me["ASI_target"].setColor(0.0901,0.6039,0.7176);
+			me["ASI_digit_UP"].setColor(0.0901,0.6039,0.7176);
+			me["ASI_decimal_UP"].setColor(0.0901,0.6039,0.7176);
+			me["ASI_digit_DN"].setColor(0.0901,0.6039,0.7176);
+			me["ASI_decimal_DN"].setColor(0.0901,0.6039,0.7176);
+		}
+		
+		tgt_ias = at_tgt_ias.getValue();
+		if (tgt_ias <= 30) {
+			ASItrgt = 0 - ASI;
+		} else if (tgt_ias >= 420) {
+			ASItrgt = 390 - ASI;
+		} else {
+			ASItrgt = tgt_ias - 30 - ASI;
+		}
+		
+		ASItrgtdiff = tgt_ias - ind_spd_2;
+		
+		if (ASItrgtdiff >= -42 and ASItrgtdiff <= 42) {
+			me["ASI_target"].setTranslation(0, ASItrgt * -6.6);
+			me["ASI_digit_UP"].hide();
+			me["ASI_decimal_UP"].hide();
+			me["ASI_digit_DN"].hide();
+			me["ASI_decimal_DN"].hide();
+			me["ASI_target"].show();
+		} else if (ASItrgtdiff < -42) {
+			if (at_mach_mode.getValue() == 1) {
+				me["ASI_digit_DN"].setText(sprintf("%3.0f", at_input_spd_mach.getValue() * 1000));
+				me["ASI_decimal_UP"].hide();
+				me["ASI_decimal_DN"].show();
+			} else {
+				me["ASI_digit_DN"].setText(sprintf("%3.0f", at_input_spd_kts.getValue()));
+				me["ASI_decimal_UP"].hide();
+				me["ASI_decimal_DN"].hide();
+			}
+			me["ASI_digit_DN"].show();
+			me["ASI_digit_UP"].hide();
+			me["ASI_target"].hide();
+		} else if (ASItrgtdiff > 42) {
+			if (at_mach_mode.getValue() == 1) {
+				me["ASI_digit_UP"].setText(sprintf("%3.0f", at_input_spd_mach.getValue() * 1000));
+				me["ASI_decimal_UP"].show();
+				me["ASI_decimal_DN"].hide();
+			} else {
+				me["ASI_digit_UP"].setText(sprintf("%3.0f", at_input_spd_kts.getValue()));
+				me["ASI_decimal_UP"].hide();
+				me["ASI_decimal_DN"].hide();
+			}
+			me["ASI_digit_UP"].show();
+			me["ASI_digit_DN"].hide();
+			me["ASI_target"].hide();
+		}
+		
+		me["ASI_trend_up"].setTranslation(0, math.clamp(ASItrend, 0, 50) * -6.6);
+		me["ASI_trend_down"].setTranslation(0, math.clamp(ASItrend, -50, 0) * -6.6);
+		
+		if (ASItrend >= 2) {
+			me["ASI_trend_up"].show();
+			me["ASI_trend_down"].hide();
+		} else if (ASItrend <= -2) {
+			me["ASI_trend_down"].show();
+			me["ASI_trend_up"].hide();
+		} else {
+			me["ASI_trend_up"].hide();
+			me["ASI_trend_down"].hide();
+		}
+		
+		# Altitude
+		if (air_switch.getValue() == 1) {
+			me.altitude_2 = altitude_2.getValue();
+			me.altitudep_2 = altitude_pfd_2.getValue();
+		} else {
+			me.altitude_2 = altitude_1.getValue();
+			me.altitudep_2 = altitude_pfd_1.getValue();
+		}
+		
+		me.altOffset = me.altitude_2 / 500 - int(me.altitude_2 / 500);
+		me.middleAltText = roundaboutAlt(me.altitude_2 / 100);
+		me.middleAltOffset = nil;
+		if (me.altOffset > 0.5) {
+			me.middleAltOffset = -(me.altOffset - 1) * 243.3424;
+		} else {
+			me.middleAltOffset = -me.altOffset * 243.3424;
+		}
+		me["ALT_scale"].setTranslation(0, -me.middleAltOffset);
+		me["ALT_scale"].update();
+		me["ALT_five"].setText(sprintf("%03d", abs(me.middleAltText+10)));
+		me["ALT_four"].setText(sprintf("%03d", abs(me.middleAltText+5)));
+		me["ALT_three"].setText(sprintf("%03d", abs(me.middleAltText)));
+		me["ALT_two"].setText(sprintf("%03d", abs(me.middleAltText-5)));
+		me["ALT_one"].setText(sprintf("%03d", abs(me.middleAltText-10)));
+		
+		me["ALT_digits"].setText(sprintf("%s", me.altitudep_2));
+		altTens = num(right(sprintf("%02d", me.altitude_2), 2));
+		me["ALT_tens"].setTranslation(0, altTens * 1.392);
+		
+		ap_alt_cur = ap_alt.getValue();
+		alt_diff_cur = alt_diff.getValue();
+		if (alt_diff_cur >= -565 and alt_diff_cur <= 565) {
+			me["ALT_target"].setTranslation(0, (alt_diff_cur / 100) * -48.66856);
+			me["ALT_target_digit"].setText(sprintf("%03d", math.round(ap_alt_cur / 100)));
+			me["ALT_digit_UP"].hide();
+			me["ALT_digit_DN"].hide();
+			me["ALT_target"].show();
+		} else if (alt_diff_cur < -565) {
+			if (alt_std_mode.getValue() == 1) {
+				if (ap_alt_cur < 10000) {
+					me["ALT_digit_DN"].setText(sprintf("%s", "FL   " ~ ap_alt_cur / 100));
+				} else {
+					me["ALT_digit_DN"].setText(sprintf("%s", "FL " ~ ap_alt_cur / 100));
+				}
+			} else {
+				me["ALT_digit_DN"].setText(sprintf("%5.0f", ap_alt_cur));
+			}
+			me["ALT_digit_DN"].show();
+			me["ALT_digit_UP"].hide();
+			me["ALT_target"].hide();
+		} else if (alt_diff_cur > 565) {
+			if (alt_std_mode.getValue() == 1) {
+				if (ap_alt_cur < 10000) {
+					me["ALT_digit_UP"].setText(sprintf("%s", "FL   " ~ ap_alt_cur / 100));
+				} else {
+					me["ALT_digit_UP"].setText(sprintf("%s", "FL " ~ ap_alt_cur / 100));
+				}
+			} else {
+				me["ALT_digit_UP"].setText(sprintf("%5.0f", ap_alt_cur));
+			}
+			me["ALT_digit_UP"].show();
+			me["ALT_digit_DN"].hide();
+			me["ALT_target"].hide();
+		}
 		me.updateCommonFast();
 	},
 };

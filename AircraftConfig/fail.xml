@@ -491,6 +491,80 @@
 				</binding>
 				<live>true</live>
 			</checkbox>
+			
+			<group>
+				<layout>hbox</layout>
+
+				<hrule>
+					<stretch type="bool">true</stretch>
+				</hrule>
+				<text>
+					<label>Air Data</label>
+				</text>
+				<hrule>
+					<stretch type="bool">true</stretch>
+				</hrule>
+			</group>
+			
+			<checkbox>
+				<label>Capt Pitot</label>
+				<halign>left</halign>
+				<property>/fdm/jsbsim/systems/navigation/air-data/probes/capt-pitot-pressure-raw/malfunction/fail_stuck</property>
+				<binding>
+					<command>dialog-apply</command>
+				</binding>
+				<live>true</live>
+			</checkbox>
+			
+			<checkbox>
+				<label>F/O Pitot</label>
+				<halign>left</halign>
+				<property>/fdm/jsbsim/systems/navigation/air-data/probes/fo-pitot-pressure-raw/malfunction/fail_stuck</property>
+				<binding>
+					<command>dialog-apply</command>
+				</binding>
+				<live>true</live>
+			</checkbox>
+			
+			<checkbox>
+				<label>Standby Pitot</label>
+				<halign>left</halign>
+				<property>/systems/failures/pitot[2]</property>
+				<binding>
+					<command>dialog-apply</command>
+				</binding>
+				<live>true</live>
+			</checkbox>
+			
+			<checkbox>
+				<label>Capt Static</label>
+				<halign>left</halign>
+				<property>/fdm/jsbsim/systems/navigation/air-data/probes/capt-static-pressure-raw/malfunction/fail_stuck</property>
+				<binding>
+					<command>dialog-apply</command>
+				</binding>
+				<live>true</live>
+			</checkbox>
+			
+			<checkbox>
+				<label>F/O Static</label>
+				<halign>left</halign>
+				<property>/fdm/jsbsim/systems/navigation/air-data/probes/fo-static-pressure-raw/malfunction/fail_stuck</property>
+				<binding>
+					<command>dialog-apply</command>
+				</binding>
+				<live>true</live>
+			</checkbox>
+			
+			<checkbox>
+				<label>Standby Static</label>
+				<halign>left</halign>
+				<property>/systems/failures/static[2]</property>
+				<binding>
+					<command>dialog-apply</command>
+				</binding>
+				<live>true</live>
+			</checkbox>
 		
 			<hrule/>
 			
@@ -506,6 +580,7 @@
 					</script>
 				</binding>
 			</button>
+			
 				
 		</group>
 

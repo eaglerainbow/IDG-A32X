@@ -1737,7 +1737,8 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-				setprop("/instrumentation/altimeter/setting-inhg", getprop("instrumentation/altimeter/setting-inhg") + 0.01);
+				setprop("/instrumentation/altimeter[0]/setting-inhg", getprop("instrumentation/altimeter[0]/setting-inhg") + 0.01);
+				setprop("/instrumentation/altimeter[1]/setting-inhg", getprop("instrumentation/altimeter[1]/setting-inhg") + 0.01);
 				</script>
 				<condition>
 					<and>
@@ -1759,7 +1760,8 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-				setprop("/instrumentation/altimeter/setting-hpa", getprop("instrumentation/altimeter/setting-hpa") + 1.0);
+				setprop("/instrumentation/altimeter[0]/setting-hpa", getprop("instrumentation/altimeter[0]/setting-hpa") + 1.0);
+				setprop("/instrumentation/altimeter[1]/setting-hpa", getprop("instrumentation/altimeter[1]/setting-hpa") + 1.0);
 				</script>
 				<condition>
 					<and>
@@ -1793,7 +1795,8 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-				setprop("/instrumentation/altimeter/setting-inhg", getprop("instrumentation/altimeter/setting-inhg") - 0.01);
+				setprop("/instrumentation/altimeter[0]/setting-inhg", getprop("instrumentation/altimeter[0]/setting-inhg") - 0.01);
+				setprop("/instrumentation/altimeter[1]/setting-inhg", getprop("instrumentation/altimeter[1]/setting-inhg") - 0.01);
 				</script>
 				<condition>
 					<and>
@@ -1815,7 +1818,8 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-				setprop("/instrumentation/altimeter/setting-hpa", getprop("instrumentation/altimeter/setting-hpa") - 1.0);
+				setprop("/instrumentation/altimeter[0]/setting-hpa", getprop("instrumentation/altimeter[0]/setting-hpa") - 1.0);
+				setprop("/instrumentation/altimeter[1]/setting-hpa", getprop("instrumentation/altimeter[1]/setting-hpa") - 1.0);
 				</script>
 				<condition>
 					<and>
@@ -1837,6 +1841,88 @@
 			<binding>
 				<command>property-adjust</command>
 				<property>controls/switches/qnh-knb</property>
+				<step>-1</step>
+				<min>0</min>
+				<max>200000</max>
+				<wrap>true</wrap>
+			</binding>
+		</action>
+	</animation>
+	
+	<animation>
+		<type>pick</type>
+		<object-name>iesi_baro_knb</object-name>
+		<action>
+			<button>0</button>
+			<button>1</button>
+			<repeatable type="bool">false</repeatable>
+			<binding>
+				<condition>
+					<greater-than-equals>
+						<property>systems/electrical/bus/dc-ess</property>
+						<value>25</value>
+					</greater-than-equals>
+				</condition>
+				<command>nasal</command>
+				<script>
+				libraries.toggleSTDIESI();
+				</script>
+			</binding>
+		</action>
+		<action>
+			<button>3</button>
+			<repeatable type="bool">true</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>
+				setprop("/instrumentation/altimeter[2]/setting-hpa", getprop("instrumentation/altimeter[2]/setting-hpa") + 1.0);
+				</script>
+				<condition>
+					<and>
+						<equals>
+							<property>modes/altimeter-stby/std</property>
+							<value>0</value>
+						</equals>
+						<greater-than-equals>
+							<property>systems/electrical/bus/dc-ess</property>
+							<value>25</value>
+						</greater-than-equals>
+					</and>
+				</condition>
+			</binding>
+			<binding>
+				<command>property-adjust</command>
+				<property>controls/switches/qnh-knb-iesi</property>
+				<step>1</step>
+				<min>0</min>
+				<max>200000</max>
+				<wrap>true</wrap>
+			</binding>
+		</action>
+		<action>
+			<button>4</button>
+			<repeatable type="bool">true</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>
+				setprop("/instrumentation/altimeter[2]/setting-hpa", getprop("instrumentation/altimeter[2]/setting-hpa") - 1.0);
+				</script>
+				<condition>
+					<and>
+						<equals>
+							<property>modes/altimeter-stby/std</property>
+							<value>0</value>
+						</equals>
+						<greater-than-equals>
+							<property>systems/electrical/bus/dc-ess</property>
+							<value>25</value>
+						</greater-than-equals>
+					</and>
+				</condition>
+			</binding>
+			<binding>
+				<command>property-adjust</command>
+				<property>controls/switches/qnh-knb-iesi</property>
 				<step>-1</step>
 				<min>0</min>
 				<max>200000</max>
@@ -1923,7 +2009,7 @@
 		<axis-alignment>xy-plane</axis-alignment>
 		<type type="string">number-value</type>
 		<format type="string">%2.2f</format>
-		<property>/instrumentation/altimeter/setting-inhg</property>
+		<property>/instrumentation/altimeter[0]/setting-inhg</property>
 		<truncate type="bool">false</truncate>
 		<font type="string">led.txf</font>
 		<draw-text type="bool">true</draw-text>
@@ -1949,7 +2035,7 @@
 		<axis-alignment>xy-plane</axis-alignment>
 		<type type="string">number-value</type>
 		<format type="string">%2.2f</format>
-		<property>/instrumentation/altimeter/setting-inhg</property>
+		<property>/instrumentation/altimeter[1]/setting-inhg</property>
 		<truncate type="bool">false</truncate>
 		<font type="string">led.txf</font>
 		<draw-text type="bool">true</draw-text>
@@ -1975,7 +2061,7 @@
 		<axis-alignment>xy-plane</axis-alignment>
 		<type type="string">number-value</type>
 		<format type="string">%2.0f</format>
-		<property>/instrumentation/altimeter/setting-hpa</property>
+		<property>/instrumentation/altimeter[0]/setting-hpa</property>
 		<truncate type="bool">false</truncate>
 		<font type="string">led.txf</font>
 		<draw-text type="bool">true</draw-text>
@@ -2001,7 +2087,7 @@
 		<axis-alignment>xy-plane</axis-alignment>
 		<type type="string">number-value</type>
 		<format type="string">%2.0f</format>
-		<property>/instrumentation/altimeter/setting-hpa</property>
+		<property>/instrumentation/altimeter[1]/setting-hpa</property>
 		<truncate type="bool">false</truncate>
 		<font type="string">led.txf</font>
 		<draw-text type="bool">true</draw-text>

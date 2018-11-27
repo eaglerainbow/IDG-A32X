@@ -317,7 +317,7 @@ var thrust_flash = maketimer(0.5, func {
 				if (getprop("/systems/thrust/state1") == "MAN" or getprop("/systems/thrust/state2") == "MAN") {
 					setprop("/systems/thrust/lvrclb", 1);
 				} else {
-					if (getprop("/instrumentation/altimeter/indicated-altitude-ft") >= getprop("/systems/thrust/clbreduc-ft") and getprop("/gear/gear[1]/wow") == 0 and getprop("/gear/gear[2]/wow") == 0) {
+					if (getprop("/instrumentation/altimeter[0]/indicated-altitude-ft") >= getprop("/systems/thrust/clbreduc-ft") and getprop("/gear/gear[1]/wow") == 0 and getprop("/gear/gear[2]/wow") == 0) {
 						setprop("/systems/thrust/lvrclb", 1);
 					} else if ((state1 == "CL" and state2 != "CL") or (state1 != "CL" and state2 == "CL") and getprop("/systems/thrust/eng-out") != 1) {
 						setprop("/systems/thrust/lvrclb", 1);
