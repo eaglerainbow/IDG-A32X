@@ -6,7 +6,7 @@
 ##############################################
 -->
 
-<PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
+<PropertyList>
 
 	<sim>
 
@@ -183,6 +183,37 @@
 
 		<menubar>
 			<default>
+				<!-- Force disable Route Manager dialogs, bindings are changed just in case the item is not grayed out properly -->
+				<!-- Uncomment when route manager can be replaced by MCDU -->
+				<!--menu n="3">
+					<item n="1">
+						<enabled type="bool" n="0">false</enabled>
+						<binding n="0">
+							<command n="0">nasal</command>
+							<script n="0">
+							gui.popupTip("You must use the MCDU to manage your route.");
+							</script>
+						</binding>
+					</item>
+					<item n="2">
+						<enabled type="bool" n="0">false</enabled>
+						<binding n="0">
+							<command n="0">nasal</command>
+							<script n="0">
+							gui.popupTip("You must use the MCDU to manage your route.");
+							</script>
+						</binding>
+					</item>
+					<item n="3">
+						<enabled type="bool" n="0">false</enabled>
+						<binding n="0">
+							<command n="0">nasal</command>
+							<script n="0">
+							gui.popupTip("You must use the MCDU to manage your route.");
+							</script>
+						</binding>
+					</item>
+				</menu-->
 				<menu n="100">
 					<label>IDG-A32X</label>
 					<enabled type="bool">true</enabled>
@@ -430,20 +461,20 @@
 		<weight n="1">
 			<name>Passengers</name>
 			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[1]"/>
-			<min-lb type="double">1500</min-lb>
-			<max-lb type="double">27000</max-lb>
+			<min-lb type="double">0</min-lb>
+			<max-lb type="double">24360</max-lb>
 		</weight>
 		<weight n="2">
 			<name>Forward Cargo</name>
 			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[2]"/>
-			<min-lb type="double">300</min-lb>
-			<max-lb type="double">8765</max-lb>
+			<min-lb type="double">0</min-lb>
+			<max-lb type="double">9400</max-lb>
 		</weight>
 		<weight n="3">
 			<name>Aft Cargo</name>
 			<weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[3]"/>
-			<min-lb type="double">300</min-lb>
-			<max-lb type="double">8765</max-lb>
+			<min-lb type="double">0</min-lb>
+			<max-lb type="double">9400</max-lb>
 		</weight>
 	</payload>
 	
@@ -599,6 +630,8 @@
 				<du4 type="double">1</du4>
 				<du5 type="double">1</du5>
 				<du6 type="double">1</du6>
+				<mcdu1 type="double">1</mcdu1>
+				<mcdu2 type="double">1</mcdu2>
 			</DU>
 			<beacon type="bool">0</beacon>
 			<interior type="double">0</interior>
@@ -619,6 +652,8 @@
 			<overhead-panel-norm type="double">0</overhead-panel-norm>
 			<main-panel-pedestal-norm type="double">0</main-panel-pedestal-norm>
 			<strobe type="bool">0</strobe>
+			<no-smoking-sign type="bool">1</no-smoking-sign>
+			<seatbelt-sign type="bool">0</seatbelt-sign>
 			<taxi-light-switch type="float">0</taxi-light-switch>
 		</lighting>
 		<OH>
@@ -646,11 +681,12 @@
 		<switches>
 			<cart type="bool">0</cart>
 			<!-- Smoking is bad :P -->
-			<no-smoking-sign type="bool">1</no-smoking-sign>
-			<seatbelt-sign type="bool">0</seatbelt-sign>
+			<no-smoking-sign type="double">0.5</no-smoking-sign>
+			<seatbelt-sign type="double">0.0</seatbelt-sign>
 			<annun-test>0</annun-test>
 			<windowprobeheat type="double">0.5</windowprobeheat>
 			<qnh-knb>100000</qnh-knb>
+			<strobe type="double">0.0</strobe>
 		</switches>
 		<tray n="0">
 			<lefttrayext type="double">0</lefttrayext>
@@ -717,6 +753,13 @@
 	</services>
 	
 	<systems>
+		<electrical n="0">
+			<bus n="0">
+				<dc-ess>0</dc-ess>
+				<dc1>0</dc1>
+				<dc2>0</dc2>
+			</bus>
+		</electrical>
 		<failures n="0">
 			<aileron-left type="bool">0</aileron-left>
 			<aileron-right type="bool">0</aileron-right>
@@ -810,6 +853,11 @@
 			<volume type="double">0.6</volume>
 		</comm>
 		
+		<ddrmi n="0">
+			<vor-adf-1 type="int">1</vor-adf-1>
+			<vor-adf-2 type="int">1</vor-adf-2>
+		</ddrmi>
+		
 		<dme n="0">
 			<frequencies>
 				<selected-mhz type="double">111.15</selected-mhz>
@@ -845,20 +893,6 @@
 			<serviceable type="bool">true</serviceable>
 			<volume type="double">0</volume>
 		</dme>
-		
-		<efis n="0">
-			<input n="0">
-				<vor-adf-1 type="int">2</vor-adf-1>
-				<vor-adf-2 type="int">2</vor-adf-2>
-			</input>
-		</efis>
-		
-		<efis n="1">
-			<input n="0">
-				<vor-adf-1 type="int">2</vor-adf-1>
-				<vor-adf-2 type="int">2</vor-adf-2>
-			</input>
-		</efis>
 		
 		<nav n="0">
 			<frequencies>
@@ -1508,32 +1542,19 @@
 			<file>Aircraft/IDG-A32X/Nasal/FMGC-b.nas</file>
 			<file>Aircraft/IDG-A32X/Nasal/FMGC-c.nas</file>
 		</fmgc>
-		<mcdu1>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/MCDU.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/F-PLNA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/INITA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/INITB.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/PERFCLB.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/PERFCRZ.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/PERFDES.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/PERFTO.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/RADNAV.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/DATA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU1/STATUS.nas</file>
-		</mcdu1>
-		<mcdu2>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/MCDU.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/F-PLNA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/INITA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/INITB.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/PERFCLB.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/PERFCRZ.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/PERFDES.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/PERFTO.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/RADNAV.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/DATA.nas</file>
-			<file>Aircraft/IDG-A32X/Nasal/MCDU2/STATUS.nas</file>
-		</mcdu2>
+		<mcdu>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/MCDU.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/F-PLNA.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/INITA.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/INITB.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/PERFCLB.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/PERFCRZ.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/PERFDES.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/PERFTO.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/RADNAV.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/DATA.nas</file>
+			<file>Aircraft/IDG-A32X/Nasal/MCDU/STATUS.nas</file>
+		</mcdu>
 		<canvas_pfd>
 			<file>Aircraft/IDG-A32X/Models/Instruments/PFD/PFD.nas</file>
 		</canvas_pfd>
@@ -1550,6 +1571,9 @@
 		<canvas_mcdu>
 			<file>Aircraft/IDG-A32X/Models/Instruments/MCDU/MCDU.nas</file>
 		</canvas_mcdu>
+		<ecam>
+			<file>Aircraft/IDG-A32X/Nasal/ECAM-controller.nas</file>
+		</ecam>
 		<icing>
 			<file>Aircraft/IDG-A32X/Nasal/icing.nas</file>
 		</icing>
@@ -1568,6 +1592,9 @@
 		<rmp>
 			<file>Aircraft/IDG-A32X/Nasal/rmp.nas</file>
 		</rmp>
+		<acp>
+			<file>Aircraft/IDG-A32X/Nasal/acp.nas</file>
+		</acp>
 	</nasal>
 
 </PropertyList>
