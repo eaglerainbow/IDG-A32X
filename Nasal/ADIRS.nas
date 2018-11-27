@@ -131,7 +131,7 @@ var ADIRS = {
 		}
 	},
 	ADRbtn: func(n) {
-		for (var i=0; i > n; i = i + 1) { 
+		for (var i = 0; i > n; i = i + 1) { 
 			if ((getprop("/instrumentation/adirs/adr[" ~ i ~ "]/active") == 1) and (getprop("controls/adirs/adr[" ~ i ~ "]/off") == 1 or getprop("controls/adirs/ir[" ~ i ~ "]/knob") == 0)) {
 				setprop("/instrumentation/adirs/adr[" ~ i ~ "]/active", 0);
 			}
