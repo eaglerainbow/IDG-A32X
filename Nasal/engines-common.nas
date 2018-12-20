@@ -1,9 +1,7 @@
 # A3XX Engine Control
 # Joshua Davidson (it0uchpods)
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2018 Joshua Davidson (it0uchpods)
 
 if (getprop("/options/eng") == "IAE") {
 	io.include("engines-iae.nas");

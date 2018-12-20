@@ -1,9 +1,7 @@
 # A320 Main Libraries
 # Joshua Davidson (it0uchpods)
 
-##############################################
-# Copyright (c) Joshua Davidson (it0uchpods) #
-##############################################
+# Copyright (c) 2018 Joshua Davidson (it0uchpods)
 
 print("-----------------------------------------------------------------------------");
 print("Copyright (c) 2017-2018 Joshua Davidson (it0uchpods)");
@@ -186,7 +184,6 @@ var systemsInit = func {
 	systemsLoop.start();
 	icing.icingInit();
 	lightsLoop.start();
-	var autopilot = gui.Dialog.new("sim/gui/dialogs/autopilot/dialog", "Aircraft/IDG-A32X/Systems/autopilot-dlg.xml");
 	setprop("/it-autoflight/input/fd1", 1);
 	setprop("/it-autoflight/input/fd2", 1);
 	libraries.ECAM.init();
