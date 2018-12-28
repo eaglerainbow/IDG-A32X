@@ -57,32 +57,26 @@
 		
 		<sensor name="systems/navigation/air-data/probes/capt-pitot-pressure-raw">
 			<input>/systems/pitot[0]/measured-total-pressure-inhg</input>
-			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/fo-pitot-pressure-raw">
 			<input>/systems/pitot[1]/measured-total-pressure-inhg</input>
-			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/stby-pitot-pressure-raw">
 			<input>/systems/pitot[2]/measured-total-pressure-inhg</input>
-			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/capt-static-pressure-raw">
 			<input>/systems/static[0]/pressure-inhg</input>
-			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/fo-static-pressure-raw">
 			<input>/systems/static[1]/pressure-inhg</input>
-			<lag>9999</lag>
 		</sensor>
 		
 		<sensor name="systems/navigation/air-data/probes/stby-static-pressure-raw">
 			<input>/systems/static[2]/pressure-inhg</input>
-			<lag>9999</lag>
 		</sensor>
 	</channel>
 	
